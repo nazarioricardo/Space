@@ -1,0 +1,36 @@
+--------------------------------------------------------------
+Naboo N-1 Royal Starfighter  (STAR WARS - Episode I)
+--------------------------------------------------------------
+Cinema 4D (Release 8) Version 2
+--------------------------------------------------------------
+
+New in version 2:
+ - cleaned up the mesh for quicker rendering & interaction 
+ - pylons are now integrated into the dorsal hull
+   (like in the original film model)
+ - HDR image based lightening
+
+As reference I used the 1:48 kit and about 60 images.
+
+Since theres is no unique N-1 design, i mixed up
+the design of the full sized model used for filming and
+the computer models seen in Episode I.
+
+I would be pleased if you send me a picture or an url if you 
+use my model for web publishing.
+
+If someone needs the high poly version write me an e-mail:
+cadmueller@t-online.de
+
+Included texture files:
+surface maps:	              Name.jpg
+reflectivity maps:            Name Refl.jpg
+bump maps:                    Name Bump.jpg
+alpha maps:                   Name Alpha.jpg
+glow maps:                    Name Glow.jpg
+
+MTFBWY
+	André Müller
+
+
+Star Wars is registered for LucasFilm & LucasArts
