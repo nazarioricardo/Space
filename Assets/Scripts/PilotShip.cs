@@ -31,12 +31,19 @@ public class PilotShip : MonoBehaviour {
 	// Axes
 	public enum RotationAxes { MouseXAndY = 0, MouseX = 1, MouseY = 2 }
 	public RotationAxes axes = RotationAxes.MouseXAndY;
+	public float mouseSensitivity = 25.0f;
+	public float turnSensitity = 5f;
+	private float rotationY = 0.0f; // rotation around the up/y axis
+	private float rotationX = 0.0f; // rotation around the right/x axis
+	private float rotationZ = 0.0f;
+	private float modAngle = 360.0f;
+
 
 	// Movement Modifiers
 	public float sensitivityX = 0.1f;
 	public float sensitivityY = 0.1f;
-	public float sensitivityZ = 1f;
-	public float antiDriftModifier = 1.5f;
+	public float sensitivityZ = 25.0f;
+	public float stabilizer = 1.5f;
 	public float acceleration = 50f;
 	public float brakeModifier = 20f;
 
@@ -70,7 +77,6 @@ public class PilotShip : MonoBehaviour {
 		animations = GetComponent<Animation> ();
 		activeMode = FlightMode.Off;
 		modeLabel.text = "Off";
-		SetCameraPosition ();
 		Debug.Log ("Started Pilot Controller");
 	}
 
@@ -103,12 +109,12 @@ public class PilotShip : MonoBehaviour {
 		if (activeMode == FlightMode.Hover) {
 			Hover (GetMouseRotation ());
 		} else {
-			Fly (GetMouseRotation ());
+//			OriginalFly (GetMouseRotation ());
+//			RogueFly ();
+			NewFly ();
 		}
 
 	}
-
-
 
 	void Hover (Vector3 mouseRotation) {
 		float landingThrust = Mathf.Clamp (thrust, minSpeed, maxSpeed);
@@ -117,10 +123,32 @@ public class PilotShip : MonoBehaviour {
 		rb.AddRelativeForce (movement * acceleration);
 	}
 
-	void Fly (Vector3 mouseRotation) {
+	void OriginalFly (Vector3 mouseRotation) {
 		float activeThrust = Mathf.Clamp (thrust, minSpeed, maxSpeed);
-		movement = new Vector3 (mouseRotation.y * activeThrust * antiDriftModifier, (-mouseRotation.x * activeThrust * antiDriftModifier), activeThrust);
-		rb.transform.Rotate (mouseRotation.x, mouseRotation.y, -moveHorizontal * (sensitivityZ));
+		movement = new Vector3 (mouseRotation.y * activeThrust * stabilizer, (-mouseRotation.x * activeThrust * stabilizer), activeThrust);
+		rb.transform.Rotate (mouseRotation.x, mouseRotation.y, -moveHorizontal * sensitivityZ);
+		rb.AddRelativeForce (movement * acceleration);
+	}
+
+	void RogueFly () {
+		RogueMouseLook ();
+//		RollInput ();
+		float activeThrust = Mathf.Clamp (thrust, minSpeed, maxSpeed);
+		float yawStabilize = rotationY * activeThrust * stabilizer;
+		float pitchStabilize = rotationX * activeThrust * stabilizer;
+		movement = new Vector3 (yawStabilize, pitchStabilize, activeThrust);
+		movement = new Vector3 (0.0f, 0.0f, activeThrust);
+		rb.AddRelativeForce (movement * acceleration);
+
+	}
+
+	void NewFly () {
+		NewMouseLook ();
+		RollInput ();
+		float activeThrust = Mathf.Clamp (thrust, minSpeed, maxSpeed);
+		float yawStabilize = rotationY * activeThrust * stabilizer;
+		float pitchStabilize = rotationX * activeThrust * stabilizer;
+		movement = new Vector3 (yawStabilize, pitchStabilize, activeThrust);
 		rb.AddRelativeForce (movement * acceleration);
 	}
 
@@ -128,8 +156,37 @@ public class PilotShip : MonoBehaviour {
 		thrust = Mathf.Clamp (thrust - brakeModifier, brakeMin, maxSpeed);
 	}
 
+	void RollInput () {
+		rotationZ = -moveHorizontal * mouseSensitivity * Time.deltaTime;
+		rb.transform.Rotate (0.0f, 0.0f, rotationZ);
+	}
+
+	void RollWithYaw () {
+		rb.transform.Rotate (0.0f, 0.0f, -rotationY * 0.5f);
+	}
+
+	void RogueMouseLook () {
+		float mouseX = Input.GetAxis("Right X");
+		float mouseY = -Input.GetAxis("Right Y");
+		rotationX += mouseY * mouseSensitivity * Time.deltaTime;
+		rotationY += mouseX * mouseSensitivity * Time.deltaTime;
+		rotationX = rotationX % modAngle;
+		rotationY = rotationY % modAngle;
+		Quaternion localRotation = Quaternion.Euler(-rotationX, rotationY, 0.0f);
+		transform.localRotation = localRotation;
+	}
+
+	void NewMouseLook () {
+		float mouseX = Input.GetAxis("Right X");
+		float mouseY = -Input.GetAxis("Right Y");
+		rotationX = mouseY * mouseSensitivity * Time.deltaTime;
+		rotationY = mouseX * mouseSensitivity * Time.deltaTime;
+		Vector3 localRotation = new Vector3 (-rotationX, rotationY, 0.0f);
+		rb.transform.Rotate (localRotation);
+	}
+
 	Vector3 GetMouseRotation () {
-		Vector3 mouse = new Vector3(Input.mousePosition.x, Input.mousePosition.y, Input.mousePosition.z);
+		Vector3 mouse = new Vector3(Input.GetAxis("Right X"), Input.GetAxis("Right Y"), Input.mousePosition.z);
 		Vector3 mouseToScreen = mainCamera.ScreenToViewportPoint(mouse);
 		float yToCenter = mouseToScreen.y - 0.5f;
 		float xToCenter = mouseToScreen.x - 0.5f;
@@ -142,12 +199,12 @@ public class PilotShip : MonoBehaviour {
 			return;
 
 		// Shift Down
-		if (Input.GetKeyDown ("q")) {
+		if (Input.GetButtonDown ("Shift Down")) {
 			ShiftDown ();
 		}
 
 		// Shift Up
-		if (Input.GetKeyDown ("e")) {
+		if (Input.GetButtonDown ("Shift Up")) {
 			ShiftUp ();
 		}
 
@@ -255,10 +312,11 @@ public class PilotShip : MonoBehaviour {
 		pilot = player;
 		isPiloting = true;
 		pilot.transform.localPosition = pilotPosition.transform.localPosition;
-		pilot.transform.localEulerAngles = new Vector3 (0, 0, 0); 
-	}
+		pilot.transform.localEulerAngles = new Vector3 (0, 0, 0);
+        SetCameraPosition();
+    }
 
-	public void RemovePilot () {
+    public void RemovePilot () {
 		pilot.transform.localPosition = pilotExitPosition.transform.localPosition;
 		pilot.transform.localEulerAngles = new Vector3 (0, 0, 0);
 		pilot = null;
@@ -266,10 +324,17 @@ public class PilotShip : MonoBehaviour {
 	}
 
 	public void SetCameraRig (GameObject rig) {
+        Debug.Log("Setting rig: " + rig);
 		cameraRig = rig;
 		cameraPivot = cameraRig.transform.GetChild(0).gameObject;
 		mainCamera = cameraPivot.transform.GetChild (0).gameObject.GetComponent<Camera> ();
 	}
+
+    public void RemoveCameraRig () {
+        cameraRig = null;
+        cameraPivot = null;
+        mainCamera = null;
+    }
 
 	void SetCameraPosition () {
 		// Set Auto Cam Settings

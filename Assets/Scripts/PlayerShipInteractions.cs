@@ -74,7 +74,7 @@ public class PlayerShipInteractions : MonoBehaviour {
 	}
 
 	void HandlePlayerInputs () {
-		if (Input.GetKeyDown ("u")) {
+		if (Input.GetButtonDown ("Use")) {
 			if (gateTrigger) {
 				gateTrigger.SendMessageUpwards ("OpenClose");
 			}
@@ -82,7 +82,7 @@ public class PlayerShipInteractions : MonoBehaviour {
 			if (pilotTrigger) {
 				TogglePilot (pilotTrigger);
 			}
-		}	
+		}
 	}
 
 	void EnterShip (Collider trigger) {
@@ -121,6 +121,7 @@ public class PlayerShipInteractions : MonoBehaviour {
 
 	void StopPilot () {
 		pilotController.RemovePilot ();
+        pilotController.RemoveCameraRig ();
 		pilotController.enabled = false;
 		characterMovement.enabled = true;
 		characterController.enabled = true;
@@ -140,6 +141,8 @@ public class PlayerShipInteractions : MonoBehaviour {
 	}
 
 	void SetThirdPersonCamera () {
+        Debug.Log("Camera Rig: " + cameraRig);
+  
 		ResetAutoCam (cameraRig.GetComponent<AutoCam> ());
 		cameraRig.transform.SetParent (gameObject.transform);
 		cameraRig.transform.localScale = new Vector3 (1, 1, 1);

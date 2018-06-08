@@ -66,8 +66,8 @@ public class CharacterMovement : MonoBehaviour {
 	}
 
 	void MouseLook () {
-		float mouseX = Input.GetAxis("Mouse X");
-		float mouseY = -Input.GetAxis("Mouse Y");
+		float mouseX = Input.GetAxis("Right X");
+		float mouseY = -Input.GetAxis("Right Y");
 
 		rotationY += mouseX * mouseSensitivity * Time.deltaTime;
 		rotationX += mouseY * mouseSensitivity * Time.deltaTime * turnSensitity;

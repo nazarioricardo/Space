@@ -5,6 +5,6 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
-    path: Assets/Scenes/CharacterControllerAndShip.unity
-    guid: 4ebee202195894969a1d3b087a3454e8
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
