@@ -51,7 +51,7 @@ public class CharacterMovement : MonoBehaviour {
 	}
 
     void MovePlayer () {
-        Debug.Log(controller.isGrounded);
+        //Debug.Log(controller.isGrounded);
 		//isGrounded = Physics.CheckSphere (groundChecker.position, groundDistance, ground, QueryTriggerInteraction.Ignore);
         //if (!isGrounded)
             //Debug.Log("Not grounded");
@@ -70,7 +70,7 @@ public class CharacterMovement : MonoBehaviour {
         if (controller.isGrounded && velocity.y < 0)
             velocity.y = 0f;
 
-        if (InputManager.JumpButton() && controller.isGrounded) {
+        if (InputManager.JumpButtonDown() && controller.isGrounded) {
             Debug.Log("Jump Pressed");
             if (controller.isGrounded)
                 velocity.y += Mathf.Sqrt(jumpHeight * gravity * -0.05f);

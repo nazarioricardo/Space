@@ -40,10 +40,10 @@ public class PilotShip : MonoBehaviour {
 
 
 	// Movement Modifiers
-	public float sensitivityX = 0.1f;
-	public float sensitivityY = 0.1f;
-	public float sensitivityZ = 25.0f;
-	public float stabilizer = 1.5f;
+	public float sensitivityX = 40.0f;
+	public float sensitivityY = 40.0f;
+	public float sensitivityZ = 50.0f;
+	public float stabilizer = 1.2f;
 	public float acceleration = 50f;
 	public float brakeModifier = 20f;
 
@@ -59,12 +59,14 @@ public class PilotShip : MonoBehaviour {
 	// Ship Movement
 	private float moveVertical;
 	private float moveHorizontal;
-	private enum FlightMode { Off, Hover, Approach, Cruise, Attack }
+	private enum FlightMode { Off, Hover, Cruise, Reverse }
 	private FlightMode activeMode;
 	private Vector3 movement;
+    private bool thrustersEngaged = false;
 	private float thrust = 0.0f;
-	private float maxSpeed = 0.0f;
-	private float minSpeed = 0.0f;
+    private float currentSpeed = 0.0f;
+	private float maxSpeed = 60.0f;
+	private float minSpeed = -1.0f;
 	private float brakeMin = 0.0f;
 
 	// Animations
@@ -75,82 +77,232 @@ public class PilotShip : MonoBehaviour {
 		Debug.Log ("Starting pilot controller");
 		rb = GetComponent<Rigidbody> ();		
 		animations = GetComponent<Animation> ();
-		activeMode = FlightMode.Off;
-		modeLabel.text = "Off";
+		//activeMode = FlightMode.Off;
+		//modeLabel.text = "Off";
 		Debug.Log ("Started Pilot Controller");
 	}
 
 	void Update() {
 		HandleShipControls ();
+        ManageFlightMode();
 	}
 	
 	void FixedUpdate() {
-		MoveShip ();	
+        //MoveShip ();
+        if (activeMode == FlightMode.Off)
+            return;
+        
+        Hover();
+        Throttle();
+        PitchYaw();
+        Elevate();
+
+        currentSpeed = rb.velocity.magnitude;
+
+        speedLabel.text = currentSpeed.ToString();
+        thrustLabel.text = thrust.ToString();
 	}
 
 	void OnCollisionEnter (Collision collision) {
 //		Debug.Log ("Collision!" + collision.impulse);
 	}
 
-	void MoveShip () {
-		if (!isPiloting || activeMode == FlightMode.Off)
-			return;
+    void ManageFlightMode() {
+        if (InputManager.ThrottleUpButtonDown()) {
+            activeMode = FlightMode.Cruise;
+            Debug.Log("Setting Flight Mode Cruise");
+            modeLabel.text = "Cruise";
+        }
 
-        moveVertical = InputManager.LeftHorizontalAxis();
-        moveHorizontal = InputManager.LeftVerticalAxis();
-		thrust = Mathf.Clamp (thrust + moveVertical, minSpeed, maxSpeed);
-		thrustLabel.text = thrust.ToString ();
-		speedLabel.text = rb.velocity.magnitude.ToString ();
-		// TODO: Learn how to stabilize forces after collision
+        if (InputManager.ThrottleDownButtonDown()) {
+            activeMode = FlightMode.Reverse;
+            Debug.Log("Setting Flight Mode Reverse");
+            modeLabel.text = "Reverse";
+        }
 
-        if (InputManager.BrakeButton())
-			Brake ();
+        if (InputManager.ThrottleUpButtonDown() && InputManager.ThrottleDownButtonDown()) {
+            activeMode = FlightMode.Hover;
+            Debug.Log("Setting Flight Mode Hover");
+            modeLabel.text = "Hover";
+        }
 
-		if (activeMode == FlightMode.Hover) {
-			Hover (GetMouseRotation ());
-		} else {
-//			OriginalFly (GetMouseRotation ());
-//			RogueFly ();
-			NewFly ();
-		}
+        //if (!InputManager.ThrottleUpButton() || !InputManager.ThrottleDownButton()) {
+        //    activeMode = FlightMode.Off;
+        //    Debug.Log("Setting Flight Mode Off");
+        //    modeLabel.text = "Off";
+        //}
+    }
 
-	}
+    //void Throttle() {
+    //    if (activeMode != FlightMode.Cruise)
+    //        return;
 
-	void Hover (Vector3 mouseRotation) {
-		float landingThrust = Mathf.Clamp (thrust, minSpeed, maxSpeed);
-		movement = new Vector3 (0.0f, -mouseRotation.x * 5f, landingThrust);
-		rb.transform.Rotate (0.0f, mouseRotation.y, -moveHorizontal * sensitivityZ);
-		rb.AddRelativeForce (movement * acceleration);
-	}
+    //    if (InputManager.ThrottleUpButtonDown()) {
+    //        thrust = Mathf.Clamp(thrust + 1, minSpeed, maxSpeed);
+    //    }
 
-	void OriginalFly (Vector3 mouseRotation) {
-		float activeThrust = Mathf.Clamp (thrust, minSpeed, maxSpeed);
-		movement = new Vector3 (mouseRotation.y * activeThrust * stabilizer, (-mouseRotation.x * activeThrust * stabilizer), activeThrust);
-		rb.transform.Rotate (mouseRotation.x, mouseRotation.y, -moveHorizontal * sensitivityZ);
-		rb.AddRelativeForce (movement * acceleration);
-	}
+    //    if (InputManager.ThrottleDownButtonDown()) {
+    //        thrust = Mathf.Clamp(thrust - 1, minSpeed, maxSpeed);
+    //    }
 
-	void RogueFly () {
-		RogueMouseLook ();
-//		RollInput ();
-		float activeThrust = Mathf.Clamp (thrust, minSpeed, maxSpeed);
-		float yawStabilize = rotationY * activeThrust * stabilizer;
-		float pitchStabilize = rotationX * activeThrust * stabilizer;
-		movement = new Vector3 (yawStabilize, pitchStabilize, activeThrust);
-		movement = new Vector3 (0.0f, 0.0f, activeThrust);
-		rb.AddRelativeForce (movement * acceleration);
+        //float activeThrust = Mathf.Clamp(thrust, minSpeed, maxSpeed);
+        //float pitchStablize = rotationY * activeThrust * stabilizer;
+        //float yawStabilize = rotationX * activeThrust * stabilizer;
+        //movement = new Vector3(yawStabilize, -pitchStablize, activeThrust);
+        //rb.AddRelativeForce(movement * acceleration);
+        //Debug.Log("Active Thrust " + activeThrust);
 
-	}
+    //    Roll();
+    //}
 
-	void NewFly () {
-		NewMouseLook ();
-		RollInput ();
-		float activeThrust = Mathf.Clamp (thrust, minSpeed, maxSpeed);
-		float yawStabilize = rotationY * activeThrust * stabilizer;
-		float pitchStabilize = rotationX * activeThrust * stabilizer;
-		movement = new Vector3 (yawStabilize, pitchStabilize, activeThrust);
-		rb.AddRelativeForce (movement * acceleration);
-	}
+    void Throttle() {
+        if (activeMode != FlightMode.Cruise)
+            return;
+
+        if (InputManager.ThrottleUpButtonDown()) {
+            thrustersEngaged = true;
+            thrust = 1200.0f;
+        }
+            
+
+        if (InputManager.ThrottleDownButtonDown()) {
+            thrustersEngaged = true;
+            thrust = -400.0f;
+        }
+
+        if (InputManager.ThrottleUpButtonUp() || InputManager.ThrottleDownButtonUp()) {
+            thrustersEngaged = false;
+            thrust = 0.0f;
+        }
+
+        rb.AddRelativeForce(0.0f, 0.0f, thrust);
+        float activeThrust = Mathf.Clamp(thrust, minSpeed, maxSpeed);
+        float pitchStablize = rotationY * 10 * stabilizer;
+        float yawStabilize = rotationX * 10 * stabilizer;
+        movement = new Vector3(yawStabilize, -pitchStablize, 0.0f);
+        rb.AddRelativeForce(movement * acceleration);
+
+        Roll();
+    }
+
+    void Elevate() {
+        float zAxis = InputManager.LeftVerticalAxis();
+
+        if (zAxis > 0) {
+            rb.AddRelativeForce(0.0f, 100.0f, 0.0f);
+        }
+
+        if (zAxis < 0) {
+            rb.AddRelativeForce(0.0f, -100.0f, 0.0f);
+        }
+    }
+
+    void PitchYaw() {
+        if (activeMode == FlightMode.Off)
+            return;
+
+        Pitch();
+        Yaw();
+    }
+
+    void Pitch() {
+        float yAxis = -InputManager.RightVerticalAxis();
+        rotationY = yAxis * sensitivityY * Time.deltaTime;
+        Vector3 localRotation = new Vector3(rotationY, 0.0f, 0.0f);
+        rb.transform.Rotate(localRotation);
+    }
+
+    void Yaw() {
+        float xAxis = InputManager.RightHorizontalAxis();
+        rotationX = xAxis * sensitivityX * Time.deltaTime;
+        Vector3 localRotation = new Vector3(0.0f, rotationX, 0.0f);
+        rb.transform.Rotate(localRotation);
+    }
+
+    void Roll()
+    {
+        float zAxis = InputManager.LeftHorizontalAxis();
+        rotationZ = -zAxis * sensitivityZ * Time.deltaTime;
+        rb.transform.Rotate(0.0f, 0.0f, rotationZ);
+    }
+
+    void Hover() {
+        if (activeMode != FlightMode.Hover)
+            return;
+
+        Strafe();
+    }
+
+    void Strafe() {
+        float xAxis = InputManager.LeftHorizontalAxis();
+        if (xAxis > 0) {
+            rb.AddRelativeForce(100.0f, 0.0f, 0.0f);
+        }
+
+        if (xAxis < 0) {
+            rb.AddRelativeForce(-100.0f, 0.0f, 0.0f);
+        }
+    }
+
+//	void MoveShip () {
+//		if (!isPiloting || activeMode == FlightMode.Off)
+//			return;
+
+//        moveVertical = InputManager.LeftVerticalAxis();
+//        moveHorizontal = InputManager.LeftHorizontalAxis();
+//		thrust = Mathf.Clamp (thrust + moveVertical, minSpeed, maxSpeed);
+//		thrustLabel.text = thrust.ToString ();
+//		speedLabel.text = rb.velocity.magnitude.ToString ();
+//		// TODO: Learn how to stabilize forces after collision
+
+//        if (InputManager.BrakeButton())
+//			Brake ();
+
+//		if (activeMode == FlightMode.Hover) {
+//			Hover (GetMouseRotation ());
+//		} else {
+////			OriginalFly (GetMouseRotation ());
+////			RogueFly ();
+	//		NewFly ();
+	//	}
+
+	//}
+
+//	void Hover (Vector3 mouseRotation) {
+//		float landingThrust = Mathf.Clamp (thrust, minSpeed, maxSpeed);
+//		movement = new Vector3 (0.0f, -mouseRotation.x * 5f, landingThrust);
+//		rb.transform.Rotate (0.0f, mouseRotation.y, -moveHorizontal * sensitivityZ);
+//		rb.AddRelativeForce (movement * acceleration);
+//	}
+
+//	void OriginalFly (Vector3 mouseRotation) {
+//		float activeThrust = Mathf.Clamp (thrust, minSpeed, maxSpeed);
+//		movement = new Vector3 (mouseRotation.y * activeThrust * stabilizer, (-mouseRotation.x * activeThrust * stabilizer), activeThrust);
+//		rb.transform.Rotate (mouseRotation.x, mouseRotation.y, -moveHorizontal * sensitivityZ);
+//		rb.AddRelativeForce (movement * acceleration);
+//	}
+
+//	void RogueFly () {
+//		RogueMouseLook ();
+////		RollInput ();
+	//	float activeThrust = Mathf.Clamp (thrust, minSpeed, maxSpeed);
+	//	float yawStabilize = rotationY * activeThrust * stabilizer;
+	//	float pitchStabilize = rotationX * activeThrust * stabilizer;
+	//	movement = new Vector3 (yawStabilize, pitchStabilize, activeThrust);
+	//	movement = new Vector3 (0.0f, 0.0f, activeThrust);
+	//	rb.AddRelativeForce (movement * acceleration);
+
+	//}
+
+	//void NewFly () {
+	//	NewMouseLook ();
+	//	RollInput ();
+		//float activeThrust = Mathf.Clamp (thrust, minSpeed, maxSpeed);
+		//float yawStabilize = rotationY * activeThrust * stabilizer;
+		//float pitchStabilize = rotationX * activeThrust * stabilizer;
+		//movement = new Vector3 (yawStabilize, pitchStabilize, activeThrust);
+		//rb.AddRelativeForce (movement * acceleration);
+	//}
 
 	void Brake () {
 		thrust = Mathf.Clamp (thrust - brakeModifier, brakeMin, maxSpeed);
@@ -165,16 +317,16 @@ public class PilotShip : MonoBehaviour {
 		rb.transform.Rotate (0.0f, 0.0f, -rotationY * 0.5f);
 	}
 
-	void RogueMouseLook () {
-		float mouseX = Input.GetAxis("Right X");
-		float mouseY = -Input.GetAxis("Right Y");
-		rotationX += mouseY * mouseSensitivity * Time.deltaTime;
-		rotationY += mouseX * mouseSensitivity * Time.deltaTime;
-		rotationX = rotationX % modAngle;
-		rotationY = rotationY % modAngle;
-		Quaternion localRotation = Quaternion.Euler(-rotationX, rotationY, 0.0f);
-		transform.localRotation = localRotation;
-	}
+	//void RogueMouseLook () {
+	//	float mouseX = Input.GetAxis("Right X");
+	//	float mouseY = -Input.GetAxis("Right Y");
+	//	rotationX += mouseY * mouseSensitivity * Time.deltaTime;
+	//	rotationY += mouseX * mouseSensitivity * Time.deltaTime;
+	//	rotationX = rotationX % modAngle;
+	//	rotationY = rotationY % modAngle;
+	//	Quaternion localRotation = Quaternion.Euler(-rotationX, rotationY, 0.0f);
+	//	transform.localRotation = localRotation;
+	//}
 
 	void NewMouseLook () {
         float mouseX = InputManager.RightHorizontalAxis();
@@ -185,28 +337,28 @@ public class PilotShip : MonoBehaviour {
 		rb.transform.Rotate (localRotation);
 	}
 
-	Vector3 GetMouseRotation () {
-        Vector3 mouse = new Vector3(InputManager.RightHorizontalAxis(), InputManager.RightHorizontalAxis(), Input.mousePosition.z);
-		Vector3 mouseToScreen = mainCamera.ScreenToViewportPoint(mouse);
-		float yToCenter = mouseToScreen.y - 0.5f;
-		float xToCenter = mouseToScreen.x - 0.5f;
-		Vector3 rotation = new Vector3 (yToCenter, xToCenter, 0.0f);
-		return rotation;
-	}
+	//Vector3 GetMouseRotation () {
+ //       Vector3 mouse = new Vector3(InputManager.RightHorizontalAxis(), InputManager.RightHorizontalAxis(), Input.mousePosition.z);
+	//	Vector3 mouseToScreen = mainCamera.ScreenToViewportPoint(mouse);
+	//	float yToCenter = mouseToScreen.y - 0.5f;
+	//	float xToCenter = mouseToScreen.x - 0.5f;
+	//	Vector3 rotation = new Vector3 (yToCenter, xToCenter, 0.0f);
+	//	return rotation;
+	//}
 
 	void HandleShipControls () {
 		if (!isPiloting)
 			return;
 
 		// Shift Down
-        if (InputManager.ThrottleDownButton()) {
-			ShiftDown ();
-		}
+  //      if (InputManager.ThrottleDownButton()) {
+		//	ShiftDown ();
+		//}
 
 		// Shift Up
-        if (InputManager.ThrottleUpButton()) {
-			ShiftUp ();
-		}
+  //      if (InputManager.ThrottleUpButton()) {
+		//	ShiftUp ();
+		//}
 
 		//if (Input.GetKeyDown ("g")) {
 		//	if (isGearOut) {
@@ -228,79 +380,79 @@ public class PilotShip : MonoBehaviour {
 
 	}
 
-	void ShiftDown () {
-		switch (activeMode) {
-		case FlightMode.Attack:
-			activeMode = FlightMode.Cruise;
-			modeLabel.text = "Cruise";
-			maxSpeed = cruiseSpeed;
-			minSpeed = 20f;
-			brakeMin = minSpeed;
-			break;
-		case FlightMode.Cruise:
-			activeMode = FlightMode.Approach;
-			modeLabel.text = "Approach";
-			maxSpeed = 10f;
-			minSpeed = -0.5f;			
-			brakeMin = 0.0f;
-			break;
-		case FlightMode.Approach:
-			activeMode = FlightMode.Hover;
-			modeLabel.text = "Hover";
-			maxSpeed = 5f;
-			minSpeed = -0.5f;
-			brakeMin = 0.0f;
-			break;
-		case FlightMode.Hover:
-			activeMode = FlightMode.Off;
-			rb.useGravity = true;
-			modeLabel.text = "Off";
-			maxSpeed = 0.0f;
-			minSpeed = 0.0f;
-			brakeMin = 0.0f;
-			break;
-		default:
-			// Already at lowest FlightMode, so do Nothing!
-			break;
-		}
-	}
+	//void ShiftDown () {
+	//	switch (activeMode) {
+	//	case FlightMode.Attack:
+	//		activeMode = FlightMode.Cruise;
+	//		modeLabel.text = "Cruise";
+	//		maxSpeed = cruiseSpeed;
+	//		minSpeed = 20f;
+	//		brakeMin = minSpeed;
+	//		break;
+	//	case FlightMode.Cruise:
+	//		activeMode = FlightMode.Approach;
+	//		modeLabel.text = "Approach";
+	//		maxSpeed = 10f;
+	//		minSpeed = -0.5f;			
+	//		brakeMin = 0.0f;
+	//		break;
+	//	case FlightMode.Approach:
+	//		activeMode = FlightMode.Hover;
+	//		modeLabel.text = "Hover";
+	//		maxSpeed = 5f;
+	//		minSpeed = -0.5f;
+	//		brakeMin = 0.0f;
+	//		break;
+	//	case FlightMode.Hover:
+	//		activeMode = FlightMode.Off;
+	//		rb.useGravity = true;
+	//		modeLabel.text = "Off";
+	//		maxSpeed = 0.0f;
+	//		minSpeed = 0.0f;
+	//		brakeMin = 0.0f;
+	//		break;
+	//	default:
+	//		// Already at lowest FlightMode, so do Nothing!
+	//		break;
+	//	}
+	//}
 
-	void ShiftUp () {
-		switch (activeMode) {
-		case FlightMode.Off:
-			activeMode = FlightMode.Hover;
-			rb.useGravity = false;
-			modeLabel.text = "Hover";
-			maxSpeed = 5f;
-			minSpeed = -0.5f;
-			brakeMin = 0.0f;
-			break;
-		case FlightMode.Hover:
-			activeMode = FlightMode.Approach;
-			modeLabel.text = "Approach";
-			maxSpeed = 10f;
-			minSpeed = -0.5f;			
-			brakeMin = 0.0f;
-			break;
-		case FlightMode.Approach:
-			activeMode = FlightMode.Cruise;
-			modeLabel.text = "Cruise";
-			maxSpeed = cruiseSpeed;
-			minSpeed = 20f;
-			brakeMin = minSpeed;
-			break;
-		case FlightMode.Cruise:
-			activeMode = FlightMode.Attack;
-			modeLabel.text = "Attack";
-			maxSpeed = attackSpeed;
-			minSpeed = 20f;
-			brakeMin = minSpeed;
-			break;
-		default:
-			// Already at highest FlightMode, so do Nothing!
-			break;
-		}
-	}
+	//void ShiftUp () {
+	//	switch (activeMode) {
+	//	case FlightMode.Off:
+	//		activeMode = FlightMode.Hover;
+	//		rb.useGravity = false;
+	//		modeLabel.text = "Hover";
+	//		maxSpeed = 5f;
+	//		minSpeed = -0.5f;
+	//		brakeMin = 0.0f;
+	//		break;
+	//	case FlightMode.Hover:
+	//		activeMode = FlightMode.Approach;
+	//		modeLabel.text = "Approach";
+	//		maxSpeed = 10f;
+	//		minSpeed = -0.5f;			
+	//		brakeMin = 0.0f;
+	//		break;
+	//	case FlightMode.Approach:
+	//		activeMode = FlightMode.Cruise;
+	//		modeLabel.text = "Cruise";
+	//		maxSpeed = cruiseSpeed;
+	//		minSpeed = 20f;
+	//		brakeMin = minSpeed;
+	//		break;
+	//	case FlightMode.Cruise:
+	//		activeMode = FlightMode.Attack;
+	//		modeLabel.text = "Attack";
+	//		maxSpeed = attackSpeed;
+	//		minSpeed = 20f;
+	//		brakeMin = minSpeed;
+	//		break;
+	//	default:
+	//		// Already at highest FlightMode, so do Nothing!
+	//		break;
+	//	}
+	//}
 
 	// Not In Use
 	// TODO: Define reason for function, and make it work based on that reason.

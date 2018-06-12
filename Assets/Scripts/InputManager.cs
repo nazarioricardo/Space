@@ -40,7 +40,7 @@ public static class InputManager {
      * Buttons
      */
 
-    public static bool ActionButton() {
+    public static bool ActionButtonDown() {
         /*
          * PC: U
          * PS: Square, joystick button 0
@@ -50,7 +50,7 @@ public static class InputManager {
         return Input.GetButtonDown("Action Button");
     }
 
-    public static bool JumpButton() {
+    public static bool JumpButtonDown() {
         /*
          * PC: Space
          * PS: X, joystick button 1
@@ -60,7 +60,7 @@ public static class InputManager {
         return Input.GetButtonDown("Jump Button");
     }
 
-    public static bool BrakeButton() {
+    public static bool BrakeButtonDown() {
         /*
          * PC: F
          * PS: Circle, joystick button 2
@@ -74,7 +74,7 @@ public static class InputManager {
      * Triggers
      */
 
-    public static bool ThrottleDownButton() {
+    public static bool ThrottleDownButtonDown() {
         /*
          * PC: Q
          * PS: L2, joystick button 6, or 4th Axis
@@ -84,7 +84,11 @@ public static class InputManager {
         return Input.GetButtonDown("Throttle Down Button");
     }
 
-    public static bool ThrottleUpButton() {
+    public static bool ThrottleDownButtonUp() {
+        return Input.GetButtonUp("Throttle Down Button");
+    }
+
+    public static bool ThrottleUpButtonDown() {
         /*
          * PC: E
          * PS: R2, joystick button 7 or 5th Axis
@@ -92,5 +96,9 @@ public static class InputManager {
          */
 
         return Input.GetButtonDown("Throttle Up Button");
+    }
+
+    public static bool ThrottleUpButtonUp() {
+        return Input.GetButtonUp("Throttle Up Button");
     }
 }
