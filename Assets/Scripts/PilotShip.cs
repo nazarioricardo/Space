@@ -103,8 +103,8 @@ public class PilotShip : MonoBehaviour {
 		speedLabel.text = rb.velocity.magnitude.ToString ();
 		// TODO: Learn how to stabilize forces after collision
 
-		//if (Input.GetKeyDown ("f"))
-			//Brake ();
+        if (InputManager.BrakeButton())
+			Brake ();
 
 		if (activeMode == FlightMode.Hover) {
 			Hover (GetMouseRotation ());
