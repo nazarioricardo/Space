@@ -4,7 +4,9 @@ using UnityEngine;
 
 public static class InputManager {
 
-    // Axes
+    /*
+     * Axes
+     */
 
     public static float LeftHorizontalAxis() {
         float r = 0.0f;
@@ -34,7 +36,9 @@ public static class InputManager {
         return Mathf.Clamp(r, -1.0f, 1.0f);
     }
 
-    // Buttons
+    /*
+     * Buttons
+     */
 
     public static bool ActionButton() {
         /*
@@ -55,6 +59,20 @@ public static class InputManager {
 
         return Input.GetButtonDown("Jump Button");
     }
+
+    public static bool BrakeButton() {
+        /*
+         * PC: F
+         * PS: Circle, joystick button 2
+         * XBox: B, joystick button 17
+         */
+
+        return Input.GetButtonDown("Brake Button");
+    }
+
+    /*
+     * Triggers
+     */
 
     public static bool ThrottleDownButton() {
         /*
