@@ -74,7 +74,7 @@ public class PlayerShipInteractions : MonoBehaviour {
 	}
 
 	void HandlePlayerInputs () {
-		if (Input.GetButtonDown ("Use")) {
+        if (InputManager.ActionButton()) {
 			if (gateTrigger) {
 				gateTrigger.SendMessageUpwards ("OpenClose");
 			}

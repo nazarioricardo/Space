@@ -59,7 +59,7 @@ public class CharacterMovement : MonoBehaviour {
 //		if (gameObject.transform.parent != null && isGrounded)
 //			Debug.Log ("Is in ship and grounded");
 
-		Vector3 move = new Vector3 (Input.GetAxis ("Horizontal"), 0, Input.GetAxis ("Vertical"));
+        Vector3 move = new Vector3 (InputManager.LeftHorizontalAxis(), 0, InputManager.LeftVerticalAxis());
 		controller.Move (controller.transform.TransformDirection (move * Time.deltaTime * speed));
 
 
@@ -70,7 +70,7 @@ public class CharacterMovement : MonoBehaviour {
         if (controller.isGrounded && velocity.y < 0)
             velocity.y = 0f;
 
-        if (Input.GetButtonDown("Jump") && controller.isGrounded) {
+        if (InputManager.JumpButton() && controller.isGrounded) {
             Debug.Log("Jump Pressed");
             if (controller.isGrounded)
                 velocity.y += Mathf.Sqrt(jumpHeight * gravity * -0.05f);
@@ -81,8 +81,8 @@ public class CharacterMovement : MonoBehaviour {
     }
 
 	void MouseLook () {
-		float mouseX = Input.GetAxis("Right X");
-		float mouseY = -Input.GetAxis("Right Y");
+        float mouseX = InputManager.RightHorizontalAxis();
+        float mouseY = -InputManager.RightVerticalAxis();
         rotationX += mouseY * mouseSensitivity * Time.deltaTime;
         rotationY += mouseX * mouseSensitivity * Time.deltaTime;
         rotationX = rotationX % modAngle;

@@ -103,8 +103,8 @@ public class PilotShip : MonoBehaviour {
 		speedLabel.text = rb.velocity.magnitude.ToString ();
 		// TODO: Learn how to stabilize forces after collision
 
-		if (Input.GetKeyDown ("f"))
-			Brake ();
+		//if (Input.GetKeyDown ("f"))
+			//Brake ();
 
 		if (activeMode == FlightMode.Hover) {
 			Hover (GetMouseRotation ());
@@ -199,32 +199,32 @@ public class PilotShip : MonoBehaviour {
 			return;
 
 		// Shift Down
-		if (Input.GetButtonDown ("Shift Down")) {
+        if (InputManager.ThrottleDownButton()) {
 			ShiftDown ();
 		}
 
 		// Shift Up
-		if (Input.GetButtonDown ("Shift Up")) {
+        if (InputManager.ThrottleUpButton()) {
 			ShiftUp ();
 		}
 
-		if (Input.GetKeyDown ("g")) {
-			if (isGearOut) {
-				animations.Play ("Vanguard Gear In");
-				isGearOut = false;
-			} else {
-				animations.Play ("Vanguard Gear Out");
-				isGearOut = true;
-			}
-		}
+		//if (Input.GetKeyDown ("g")) {
+		//	if (isGearOut) {
+		//		animations.Play ("Vanguard Gear In");
+		//		isGearOut = false;
+		//	} else {
+		//		animations.Play ("Vanguard Gear Out");
+		//		isGearOut = true;
+		//	}
+		//}
 
-		if (Input.GetKeyDown ("o")) {
-			if (isGearOut) {
-				gameObject.SendMessage ("OpenClose");
-			} else {
-				gameObject.SendMessage ("OpenClose");
-			}
-		}
+		//if (Input.GetKeyDown ("o")) {
+		//	if (isGearOut) {
+		//		gameObject.SendMessage ("OpenClose");
+		//	} else {
+		//		gameObject.SendMessage ("OpenClose");
+		//	}
+		//}
 
 	}
 
