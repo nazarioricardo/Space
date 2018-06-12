@@ -96,8 +96,8 @@ public class PilotShip : MonoBehaviour {
 		if (!isPiloting || activeMode == FlightMode.Off)
 			return;
 
-		moveVertical = Input.GetAxis ("Vertical");
-		moveHorizontal = Input.GetAxis ("Horizontal");
+        moveVertical = InputManager.LeftHorizontalAxis();
+        moveHorizontal = InputManager.LeftVerticalAxis();
 		thrust = Mathf.Clamp (thrust + moveVertical, minSpeed, maxSpeed);
 		thrustLabel.text = thrust.ToString ();
 		speedLabel.text = rb.velocity.magnitude.ToString ();
@@ -177,8 +177,8 @@ public class PilotShip : MonoBehaviour {
 	}
 
 	void NewMouseLook () {
-		float mouseX = Input.GetAxis("Right X");
-		float mouseY = -Input.GetAxis("Right Y");
+        float mouseX = InputManager.RightHorizontalAxis();
+        float mouseY = -InputManager.RightVerticalAxis();
 		rotationX = mouseY * mouseSensitivity * Time.deltaTime;
 		rotationY = mouseX * mouseSensitivity * Time.deltaTime;
 		Vector3 localRotation = new Vector3 (-rotationX, rotationY, 0.0f);
@@ -186,7 +186,7 @@ public class PilotShip : MonoBehaviour {
 	}
 
 	Vector3 GetMouseRotation () {
-		Vector3 mouse = new Vector3(Input.GetAxis("Right X"), Input.GetAxis("Right Y"), Input.mousePosition.z);
+        Vector3 mouse = new Vector3(InputManager.RightHorizontalAxis(), InputManager.RightHorizontalAxis(), Input.mousePosition.z);
 		Vector3 mouseToScreen = mainCamera.ScreenToViewportPoint(mouse);
 		float yToCenter = mouseToScreen.y - 0.5f;
 		float xToCenter = mouseToScreen.x - 0.5f;
