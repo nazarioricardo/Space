@@ -124,6 +124,7 @@ public class PilotShip : MonoBehaviour {
             activeMode = FlightMode.Hover;
             Debug.Log("Setting Flight Mode Hover");
             modeLabel.text = "Hover";
+            StablizeFromTumble();
         }
 
         //if (!InputManager.ThrottleUpButton() || !InputManager.ThrottleDownButton()) {
@@ -176,11 +177,14 @@ public class PilotShip : MonoBehaviour {
         }
 
         rb.AddRelativeForce(0.0f, 0.0f, thrust);
-        float activeThrust = Mathf.Clamp(thrust, minSpeed, maxSpeed);
-        float pitchStablize = rotationY * 10 * stabilizer;
-        float yawStabilize = rotationX * 10 * stabilizer;
-        movement = new Vector3(yawStabilize, -pitchStablize, 0.0f);
-        rb.AddRelativeForce(movement * acceleration);
+        Debug.Log("Current velocity: " + rb.velocity);
+        float pitchStablizer = rotationY * 3 * stabilizer;
+        float yawStabilizer = rotationX * 3 * stabilizer;
+        movement = new Vector3(yawStabilizer, -pitchStablizer, 0.0f);
+        rb.AddRelativeForce(movement);
+        //float yawStabilizer = rb.velocity.x * 10;
+        //float pitchStabilizer = rb.velocity.y * 10;
+        //rb.AddRelativeForce(yawStabilizer, pitchStabilizer, 0.0f);
 
         Roll();
     }
@@ -242,6 +246,10 @@ public class PilotShip : MonoBehaviour {
         if (xAxis < 0) {
             rb.AddRelativeForce(-100.0f, 0.0f, 0.0f);
         }
+    }
+
+    void StablizeFromTumble() {
+        rb.angularVelocity = Vector3.zero;
     }
 
 //	void MoveShip () {
