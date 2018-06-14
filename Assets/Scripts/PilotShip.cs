@@ -49,8 +49,6 @@ public class PilotShip : MonoBehaviour {
 	private GameObject pilot;
 
 	// Ship Movement
-	private float moveVertical;
-	private float moveHorizontal;
 	private enum ThrustMode { Off, Free, Hover, Cruise, Reverse }
 	private ThrustMode activeThrustMode;
 	private Vector3 movement;
@@ -221,6 +219,8 @@ public class PilotShip : MonoBehaviour {
         if (xAxis < 0) {
             rb.AddRelativeForce(-100.0f, 0.0f, 0.0f);
         }
+
+        Debug.Log("Strafing: " + xAxis);
     }
 
     void StablizeFromTumble() {
