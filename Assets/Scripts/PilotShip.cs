@@ -29,21 +29,14 @@ public class PilotShip : MonoBehaviour {
 	public bool isWalkable;
 
 	// Axes
-	public enum RotationAxes { MouseXAndY = 0, MouseX = 1, MouseY = 2 }
-	public RotationAxes axes = RotationAxes.MouseXAndY;
-	public float mouseSensitivity = 25.0f;
-	public float turnSensitity = 5f;
 	private float rotationY = 0.0f; // rotation around the up/y axis
 	private float rotationX = 0.0f; // rotation around the right/x axis
 	private float rotationZ = 0.0f;
-	private float modAngle = 360.0f;
-
 
 	// Movement Modifiers
 	public float sensitivityX = 60.0f;
 	public float sensitivityY = 60.0f;
 	public float sensitivityZ = 50.0f;
-	public float stabilizer = 1.2f;
 	public float acceleration = 50f;
 	public float brakeModifier = 20f;
 
@@ -54,7 +47,6 @@ public class PilotShip : MonoBehaviour {
 
 	// Player Management Props
 	private GameObject pilot;
-	private bool isPiloting = false;
 
 	// Ship Movement
 	private float moveVertical;
@@ -62,24 +54,15 @@ public class PilotShip : MonoBehaviour {
 	private enum ThrustMode { Off, Free, Hover, Cruise, Reverse }
 	private ThrustMode activeThrustMode;
 	private Vector3 movement;
-    private bool thrustersEngaged = false;
 	private float thrust = 0.0f;
     private float currentSpeed = 0.0f;
-	private float maxSpeed = 60.0f;
-	private float minSpeed = -1.0f;
-	private float brakeMin = 0.0f;
 
-	// Animations
-	private Animation animations;
-	private bool isGearOut = true;
 		
 	void Start () {
 		Debug.Log ("Starting pilot controller");
 		rb = GetComponent<Rigidbody> ();		
-		animations = GetComponent<Animation> ();
 		activeThrustMode = ThrustMode.Off;
 		modeLabel.text = "Off";
-		Debug.Log ("Started Pilot Controller");
 	}
 
 	void Update() {
@@ -168,13 +151,11 @@ public class PilotShip : MonoBehaviour {
             return;
 
         if (activeThrustMode == ThrustMode.Cruise) {
-            thrustersEngaged = true;
             thrust = 200.0f;
         }
             
 
         if (activeThrustMode == ThrustMode.Reverse) {
-            thrustersEngaged = true;
             thrust = -100.0f;
         }
 
@@ -246,15 +227,8 @@ public class PilotShip : MonoBehaviour {
         rb.angularVelocity = Vector3.zero;
     }
 
-	// Not In Use
-	// TODO: Define reason for function, and make it work based on that reason.
-	void RandomTorque() {
-		rb.AddRelativeTorque (Random.Range(-10.0f, 10.0f), Random.Range(-10.0f, 10.0f), Random.Range(-10.0f, 10.0f));
-	}
-
 	public void SetPilot (GameObject player) {
 		pilot = player;
-		isPiloting = true;
 		pilot.transform.localPosition = pilotPosition.transform.localPosition;
 		pilot.transform.localEulerAngles = new Vector3 (0, 0, 0);
         SetCameraPosition();
@@ -264,7 +238,6 @@ public class PilotShip : MonoBehaviour {
 		pilot.transform.localPosition = pilotExitPosition.transform.localPosition;
 		pilot.transform.localEulerAngles = new Vector3 (0, 0, 0);
 		pilot = null;
-		isPiloting = false;
 	}
 
 	public void SetCameraRig (GameObject rig) {
