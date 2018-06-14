@@ -23,7 +23,6 @@ public class CharacterMovement : MonoBehaviour {
 	private Vector3 velocity;
 	private float gravity = -9.81f;
 	private float groundDistance;
-	private bool isGrounded = false;
 
 	void Start () {
 		controller = GetComponent<CharacterController>();
@@ -51,13 +50,6 @@ public class CharacterMovement : MonoBehaviour {
 	}
 
     void MovePlayer () {
-        //Debug.Log(controller.isGrounded);
-		//isGrounded = Physics.CheckSphere (groundChecker.position, groundDistance, ground, QueryTriggerInteraction.Ignore);
-        //if (!isGrounded)
-            //Debug.Log("Not grounded");
-
-//		if (gameObject.transform.parent != null && isGrounded)
-//			Debug.Log ("Is in ship and grounded");
 
         Vector3 move = new Vector3 (InputManager.LeftHorizontalAxis(), 0, InputManager.LeftVerticalAxis());
 		controller.Move (controller.transform.TransformDirection (move * Time.deltaTime * speed));

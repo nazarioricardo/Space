@@ -1,8 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Rewired;
 
 public static class InputManager {
+
+    private static Player player = Rewired.ReInput.players.GetPlayer(0);
 
     /*
      * Axes
@@ -10,29 +13,25 @@ public static class InputManager {
 
     public static float LeftHorizontalAxis() {
         float r = 0.0f;
-        r += Input.GetAxis("J Left Horizontal Axis");
-        r += Input.GetAxis("K Left Horizontal Axis");
+        r += player.GetAxis("Left Horizontal");
         return Mathf.Clamp(r, -1.0f, 1.0f);
     }
 
     public static float LeftVerticalAxis() {
         float r = 0.0f;
-        r += Input.GetAxis("J Left Vertical Axis");
-        r += Input.GetAxis("K Left Vertical Axis");
+        r += player.GetAxis("Left Vertical");
         return Mathf.Clamp(r, -1.0f, 1.0f);
     }
 
     public static float RightHorizontalAxis() {
         float r = 0.0f;
-        r += Input.GetAxis("J Right Horizontal Axis");
-        r += Input.GetAxis("K Right Horizontal Axis");
+        r += player.GetAxis("Right Horizontal");
         return Mathf.Clamp(r, -1.0f, 1.0f);
     }
 
     public static float RightVerticalAxis() {
         float r = 0.0f;
-        r += Input.GetAxis("J Right Vertical Axis");
-        r += Input.GetAxis("K Right Vertical Axis");
+        r += player.GetAxis("Right Vertical");
         return Mathf.Clamp(r, -1.0f, 1.0f);
     }
 
@@ -47,7 +46,7 @@ public static class InputManager {
          * XBox: X, joystick button 18
          */
 
-        return Input.GetButtonDown("Action Button");
+        return player.GetButtonDown("Action");
     }
 
     public static bool JumpButtonDown() {
@@ -57,7 +56,7 @@ public static class InputManager {
          * XBox: A, joystick button 16
          */
 
-        return Input.GetButtonDown("Jump Button");
+        return player.GetButtonDown("Jump");
     }
 
     public static bool BrakeButtonDown() {
@@ -67,7 +66,7 @@ public static class InputManager {
          * XBox: B, joystick button 17
          */
 
-        return Input.GetButtonDown("Brake Button");
+        return player.GetButtonDown("Brake");
     }
 
     /*
@@ -81,11 +80,11 @@ public static class InputManager {
          * Xbox: Left Trigger, 5th AXIS
          */
 
-        return Input.GetButtonDown("Throttle Down Button");
+        return player.GetButtonDown("Left Trigger");
     }
 
     public static bool ThrottleDownButtonUp() {
-        return Input.GetButtonUp("Throttle Down Button");
+        return player.GetButtonUp("Left Trigger");
     }
 
     public static bool ThrottleUpButtonDown() {
@@ -95,10 +94,10 @@ public static class InputManager {
          * XBox: Right Trigger, 6th AXIS
          */
 
-        return Input.GetButtonDown("Throttle Up Button");
+        return player.GetButtonDown("Right Trigger");
     }
 
     public static bool ThrottleUpButtonUp() {
-        return Input.GetButtonUp("Throttle Up Button");
+        return player.GetButtonUp("Right Trigger");
     }
 }
