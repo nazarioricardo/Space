@@ -37,7 +37,7 @@ public class PilotShip : MonoBehaviour {
 	public float sensitivityX = 60.0f;
 	public float sensitivityY = 60.0f;
 	public float sensitivityZ = 50.0f;
-	public float acceleration = 50f;
+	public float acceleration = 0.0001f;
 	public float brakeModifier = 20f;
 
 	public float cruiseSpeed = 60f;
@@ -54,13 +54,14 @@ public class PilotShip : MonoBehaviour {
 	private Vector3 movement;
 	private float thrust = 0.0f;
     private float currentSpeed = 0.0f;
+    private Mesh shipMesh;
 
-		
 	void Start () {
 		Debug.Log ("Starting pilot controller");
 		rb = GetComponent<Rigidbody> ();		
 		activeThrustMode = ThrustMode.Off;
 		modeLabel.text = "Off";
+        shipMesh = gameObject.GetComponent<Mesh>();
 	}
 
 	void Update() {
@@ -81,6 +82,7 @@ public class PilotShip : MonoBehaviour {
 
         speedLabel.text = currentSpeed.ToString();
         thrustLabel.text = thrust.ToString();
+
 	}
 
     void ManageThrustMode() {
@@ -118,9 +120,8 @@ public class PilotShip : MonoBehaviour {
                 SetHover();
         }
 
-        if (InputManager.ThrottleUpButtonDown() && InputManager.ThrottleDownButtonDown()) {
+        if (InputManager.ThrottleUpButtonDown() && InputManager.ThrottleDownButtonDown())
             SetHover();
-        }
     }
 
     void SetFree() {
@@ -148,28 +149,23 @@ public class PilotShip : MonoBehaviour {
         if (activeThrustMode == ThrustMode.Hover || activeThrustMode == ThrustMode.Free)
             return;
 
-        if (activeThrustMode == ThrustMode.Cruise) {
+        if (activeThrustMode == ThrustMode.Cruise)
             thrust = 200.0f;
-        }
-            
 
-        if (activeThrustMode == ThrustMode.Reverse) {
+        if (activeThrustMode == ThrustMode.Reverse)
             thrust = -100.0f;
-        }
-
+        
         transform.position += transform.forward * Time.deltaTime * thrust;
     }
 
     void Elevate() {
         float zAxis = InputManager.LeftVerticalAxis();
 
-        if (zAxis > 0) {
+        if (zAxis > 0)
             rb.AddRelativeForce(0.0f, 100.0f, 0.0f);
-        }
-
-        if (zAxis < 0) {
+        
+        if (zAxis < 0) 
             rb.AddRelativeForce(0.0f, -100.0f, 0.0f);
-        }
     }
 
     void PitchYaw() {
@@ -212,13 +208,15 @@ public class PilotShip : MonoBehaviour {
 
     void Strafe() {
         float xAxis = InputManager.LeftHorizontalAxis();
-        if (xAxis > 0) {
+        if (xAxis > 0) 
             rb.AddRelativeForce(100.0f, 0.0f, 0.0f);
-        }
 
-        if (xAxis < 0) {
+        if (xAxis < 0)
             rb.AddRelativeForce(-100.0f, 0.0f, 0.0f);
-        }
+    }
+
+    float Thrust() {
+        return Mathf.Pow(acceleration, 1.1f);
     }
 
     void StablizeFromTumble() {
