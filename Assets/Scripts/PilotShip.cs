@@ -219,8 +219,6 @@ public class PilotShip : MonoBehaviour {
         if (xAxis < 0) {
             rb.AddRelativeForce(-100.0f, 0.0f, 0.0f);
         }
-
-        Debug.Log("Strafing: " + xAxis);
     }
 
     void StablizeFromTumble() {

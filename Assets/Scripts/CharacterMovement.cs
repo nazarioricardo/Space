@@ -34,10 +34,10 @@ public class CharacterMovement : MonoBehaviour {
 	void Update () {
 		MovePlayer ();
 		MouseLook ();
-        Jump();
 	}
 
 	void FixedUpdate () {
+        Jump();
 	}
 
 	// Custom Methods
@@ -63,7 +63,6 @@ public class CharacterMovement : MonoBehaviour {
             velocity.y = 0f;
 
         if (InputManager.JumpButtonDown() && controller.isGrounded) {
-            Debug.Log("Jump Pressed");
             if (controller.isGrounded)
                 velocity.y += Mathf.Sqrt(jumpHeight * gravity * -0.05f);
             //velocity.y += Mathf.Sqrt(jumpHeight * -2f * gravity);
