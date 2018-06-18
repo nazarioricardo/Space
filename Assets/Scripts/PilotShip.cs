@@ -37,7 +37,7 @@ public class PilotShip : MonoBehaviour {
 	public float sensitivityX = 60.0f;
 	public float sensitivityY = 60.0f;
 	public float sensitivityZ = 50.0f;
-	public float acceleration = 0.0001f;
+	public float acceleration = 50f;
 	public float brakeModifier = 20f;
 
 	public float cruiseSpeed = 60f;
