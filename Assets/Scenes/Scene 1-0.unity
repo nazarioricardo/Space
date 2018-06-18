@@ -599,6 +599,10 @@ Prefab:
       propertyPath: m_DynamicOccludee
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: e975a8890e0a14e799095ae4df167140, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e975a8890e0a14e799095ae4df167140, type: 3}
   m_IsPrefabParent: 0
@@ -7007,7 +7011,7 @@ MonoBehaviour:
   isWalkable: 0
   sensitivityX: 60
   sensitivityY: 60
-  sensitivityZ: 50
+  sensitivityZ: 0.5
   acceleration: 50
   brakeModifier: 20
   cruiseSpeed: 60

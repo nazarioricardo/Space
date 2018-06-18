@@ -36,7 +36,8 @@ public class PilotShip : MonoBehaviour {
 	// Movement Modifiers
 	public float sensitivityX = 60.0f;
 	public float sensitivityY = 60.0f;
-	public float sensitivityZ = 50.0f;
+	public float sensitivityZ = 0.5f;
+    public float rollSpeed = 90;
 	public float acceleration = 50f;
 	public float brakeModifier = 20f;
 
@@ -55,6 +56,13 @@ public class PilotShip : MonoBehaviour {
 	private float thrust = 0.0f;
     private float maxThrust = 400.0f;
     private float minThrust = -100.0f;
+    private float vThrust = 0.0f;
+    private float maxV = 100.0f;
+    private float minV = -100.0f;
+    private float sThrust = 0.0f;
+    private float maxS = 100.0f;
+    private float minS = -100.0f;
+
     private float currentSpeed = 0.0f;
     private Mesh shipMesh;
 
@@ -162,13 +170,23 @@ public class PilotShip : MonoBehaviour {
     }
 
     void Elevate() {
-        float zAxis = InputManager.LeftVerticalAxis();
+        float yAxis = InputManager.LeftVerticalAxis();
 
-        if (zAxis > 0)
-            rb.AddRelativeForce(0.0f, 100.0f, 0.0f);
+        if (yAxis > 0)
+            vThrust = Mathf.Clamp(vThrust + acceleration * Time.deltaTime, minV, maxV);
+        //rb.AddRelativeForce(0.0f, 100.0f, 0.0f);
+
+        if (yAxis < 0)
+            vThrust = Mathf.Clamp(vThrust - acceleration * Time.deltaTime, minV, maxV);
+        //rb.AddRelativeForce(0.0f, -100.0f, 0.0f);
+
+        if (yAxis == 0.0f && vThrust > 0)
+            vThrust = Mathf.Clamp(vThrust - acceleration * Time.deltaTime, 0, maxV);
+
+        if (yAxis == 0.0f && vThrust < 0)
+            vThrust = Mathf.Clamp(vThrust + acceleration * Time.deltaTime, minV, 0);
         
-        if (zAxis < 0) 
-            rb.AddRelativeForce(0.0f, -100.0f, 0.0f);
+        transform.position += transform.up * vThrust * Time.deltaTime;
     }
 
     void PitchYaw() {
@@ -197,16 +215,20 @@ public class PilotShip : MonoBehaviour {
         if (activeThrustMode == ThrustMode.Hover)
             return;
         
-        float zAxis = InputManager.LeftHorizontalAxis();
-        rotationZ = -zAxis * sensitivityZ * Time.deltaTime;
-        rb.transform.Rotate(0.0f, 0.0f, rotationZ);
+        float zAxis = InputManager.LeftHorizontalAxis() * -1f * rollSpeed;
+        rotationZ = Mathf.Lerp(rotationZ, zAxis, sensitivityZ);        transform.Rotate(new Vector3(0.0f, 0.0f, rotationZ) * Time.deltaTime);
     }
 
     void FreeCruise() {
         if (activeThrustMode != ThrustMode.Free)
             return;
 
-        thrust = Mathf.Clamp(thrust - 10f * Time.deltaTime, minThrust, maxThrust);
+        if (thrust > 0)
+            thrust = Mathf.Clamp(thrust - 10f * Time.deltaTime, minThrust, maxThrust);
+
+        if (thrust < 0)
+            thrust = Mathf.Clamp(thrust + 10f * Time.deltaTime, minThrust, maxThrust);
+
         transform.position += transform.forward * thrust * Time.deltaTime;
     }
 
@@ -215,17 +237,31 @@ public class PilotShip : MonoBehaviour {
             return;
 
         Strafe();
-        thrust = Mathf.Clamp(thrust - 20f * Time.deltaTime, minThrust, maxThrust);
+
+        if (thrust > 0)
+            thrust = Mathf.Clamp(thrust - 20f * Time.deltaTime, minThrust, maxThrust);
+
+        if (thrust < 0)
+            thrust = Mathf.Clamp(thrust + 20f * Time.deltaTime, minThrust, maxThrust);
+
         transform.position += transform.forward * thrust * Time.deltaTime;
     }
 
     void Strafe() {
         float xAxis = InputManager.LeftHorizontalAxis();
-        if (xAxis > 0) 
-            rb.AddRelativeForce(100.0f, 0.0f, 0.0f);
-
+        if (xAxis > 0)
+            sThrust = Mathf.Clamp(sThrust + acceleration * Time.deltaTime, minS, maxS);
+        
         if (xAxis < 0)
-            rb.AddRelativeForce(-100.0f, 0.0f, 0.0f);
+            sThrust = Mathf.Clamp(sThrust - acceleration * Time.deltaTime, minS, maxS);
+        
+        if (xAxis == 0.0f && sThrust > 0)
+            sThrust = Mathf.Clamp(sThrust - acceleration * Time.deltaTime, 0, maxS);
+
+        if (xAxis == 0.0f && sThrust < 0)
+            sThrust = Mathf.Clamp(sThrust + acceleration * Time.deltaTime, minS, 0);
+
+        transform.position += transform.right * sThrust * Time.deltaTime;
     }
 
     void StablizeFromTumble() {
