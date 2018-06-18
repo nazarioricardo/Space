@@ -53,6 +53,8 @@ public class PilotShip : MonoBehaviour {
 	private ThrustMode activeThrustMode;
 	private Vector3 movement;
 	private float thrust = 0.0f;
+    private float maxThrust = 400.0f;
+    private float minThrust = -100.0f;
     private float currentSpeed = 0.0f;
     private Mesh shipMesh;
 
@@ -71,7 +73,8 @@ public class PilotShip : MonoBehaviour {
 	void FixedUpdate() {
         if (activeThrustMode == ThrustMode.Off)
             return;
-        
+
+        FreeCruise();
         Hover();
         Throttle();
         Roll();
@@ -150,12 +153,12 @@ public class PilotShip : MonoBehaviour {
             return;
 
         if (activeThrustMode == ThrustMode.Cruise)
-            thrust = 200.0f;
+            thrust = Mathf.Clamp(thrust + acceleration * Time.deltaTime, minThrust, maxThrust);
 
         if (activeThrustMode == ThrustMode.Reverse)
-            thrust = -100.0f;
+            thrust = Mathf.Clamp(thrust - acceleration * Time.deltaTime, minThrust, maxThrust);
         
-        transform.position += transform.forward * Time.deltaTime * thrust;
+        transform.position += transform.forward * thrust * Time.deltaTime;
     }
 
     void Elevate() {
@@ -199,11 +202,21 @@ public class PilotShip : MonoBehaviour {
         rb.transform.Rotate(0.0f, 0.0f, rotationZ);
     }
 
+    void FreeCruise() {
+        if (activeThrustMode != ThrustMode.Free)
+            return;
+
+        thrust = Mathf.Clamp(thrust - 10f * Time.deltaTime, minThrust, maxThrust);
+        transform.position += transform.forward * thrust * Time.deltaTime;
+    }
+
     void Hover() {
         if (activeThrustMode != ThrustMode.Hover)
             return;
 
         Strafe();
+        thrust = Mathf.Clamp(thrust - 20f * Time.deltaTime, minThrust, maxThrust);
+        transform.position += transform.forward * thrust * Time.deltaTime;
     }
 
     void Strafe() {
@@ -213,10 +226,6 @@ public class PilotShip : MonoBehaviour {
 
         if (xAxis < 0)
             rb.AddRelativeForce(-100.0f, 0.0f, 0.0f);
-    }
-
-    float Thrust() {
-        return Mathf.Pow(acceleration, 1.1f);
     }
 
     void StablizeFromTumble() {
