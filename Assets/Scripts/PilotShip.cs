@@ -44,7 +44,8 @@ public class PilotShip : MonoBehaviour {
 	public float cruiseSpeed = 60f;
 	public float attackSpeed = 80f;
 
-	private Rigidbody rb;
+    private GameObject hull;
+    private Rigidbody rb;
 
 	// Player Management Props
 	private GameObject pilot;
@@ -53,25 +54,31 @@ public class PilotShip : MonoBehaviour {
 	private enum ThrustMode { Off, Free, Hover, Cruise, Reverse }
 	private ThrustMode activeThrustMode;
 	private Vector3 movement;
-	private float thrust = 0.0f;
+	
+    private float thrust = 0.0f;
     private float maxThrust = 400.0f;
     private float minThrust = -100.0f;
+
     private float vThrust = 0.0f;
     private float maxV = 100.0f;
     private float minV = -100.0f;
+
     private float sThrust = 0.0f;
     private float maxS = 100.0f;
     private float minS = -100.0f;
 
+    private float bank = 0.0f;
+    private float maxBank = 45f;
+    private float minBank = -45f;
+
     private float currentSpeed = 0.0f;
-    private Mesh shipMesh;
 
 	void Start () {
 		Debug.Log ("Starting pilot controller");
-		rb = GetComponent<Rigidbody> ();		
+        hull = transform.GetChild(0).gameObject;
+        rb = hull.GetComponent<Rigidbody>();
 		activeThrustMode = ThrustMode.Off;
 		modeLabel.text = "Off";
-        shipMesh = gameObject.GetComponent<Mesh>();
 	}
 
 	void Update() {
@@ -201,14 +208,15 @@ public class PilotShip : MonoBehaviour {
         float yAxis = -InputManager.RightVerticalAxis();
         rotationY = yAxis * sensitivityY * Time.deltaTime;
         Vector3 localRotation = new Vector3(rotationY, 0.0f, 0.0f);
-        rb.transform.Rotate(localRotation);
+        transform.Rotate(localRotation);
     }
 
     void Yaw() {
         float xAxis = InputManager.RightHorizontalAxis();
         rotationX = xAxis * sensitivityX * Time.deltaTime;
         Vector3 localRotation = new Vector3(0.0f, rotationX, 0.0f);
-        rb.transform.Rotate(localRotation);
+        transform.Rotate(localRotation);
+        Bank(xAxis);
     }
 
     void Roll() {
@@ -216,7 +224,8 @@ public class PilotShip : MonoBehaviour {
             return;
         
         float zAxis = InputManager.LeftHorizontalAxis() * -1f * rollSpeed;
-        rotationZ = Mathf.Lerp(rotationZ, zAxis, sensitivityZ);        transform.Rotate(new Vector3(0.0f, 0.0f, rotationZ) * Time.deltaTime);
+        rotationZ = Mathf.Lerp(rotationZ, zAxis, sensitivityZ);        
+        transform.Rotate(new Vector3(0.0f, 0.0f, rotationZ) * Time.deltaTime);
     }
 
     void FreeCruise() {
@@ -261,7 +270,30 @@ public class PilotShip : MonoBehaviour {
         if (xAxis == 0.0f && sThrust < 0)
             sThrust = Mathf.Clamp(sThrust + acceleration * Time.deltaTime, minS, 0);
 
+        Bank(xAxis);
         transform.position += transform.right * sThrust * Time.deltaTime;
+    }
+
+    void Bank(float xMovement) {
+        /*
+         * Turn left
+         * negative xMovement
+         * postive bank
+         * 
+         * Turn right
+         * positve xMovement
+         * negative bank
+         */
+
+        bank = Mathf.Lerp(bank, -xMovement * 45 * Time.deltaTime * thrust / 10, Time.deltaTime * 2);
+        Debug.Log("Bank: " + bank);
+        Vector3 rotation = new Vector3(0.0f, 0.0f, bank);
+
+        hull.transform.localEulerAngles = rotation;
+    }
+
+    void StrafeRoll() {
+        
     }
 
     void StablizeFromTumble() {
