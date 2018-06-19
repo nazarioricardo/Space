@@ -257,7 +257,7 @@ public class PilotShip : MonoBehaviour {
         
         if (xAxis == 0.0f && sThrust > 0)
             sThrust = Mathf.Clamp(sThrust - acceleration * Time.deltaTime, 0, maxS);
-
+        
         if (xAxis == 0.0f && sThrust < 0)
             sThrust = Mathf.Clamp(sThrust + acceleration * Time.deltaTime, minS, 0);
 
