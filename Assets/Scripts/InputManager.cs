@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Rewired;
 
-public static class InputManager {
+public static class InputManager
+{
 
     private static Player player = Rewired.ReInput.players.GetPlayer(0);
 
@@ -11,25 +12,29 @@ public static class InputManager {
      * Axes
      */
 
-    public static float LeftHorizontalAxis() {
+    public static float LeftHorizontalAxis()
+    {
         float r = 0.0f;
         r += player.GetAxis("Left Horizontal");
         return Mathf.Clamp(r, -1.0f, 1.0f);
     }
 
-    public static float LeftVerticalAxis() {
+    public static float LeftVerticalAxis()
+    {
         float r = 0.0f;
         r += player.GetAxis("Left Vertical");
         return Mathf.Clamp(r, -1.0f, 1.0f);
     }
 
-    public static float RightHorizontalAxis() {
+    public static float RightHorizontalAxis()
+    {
         float r = 0.0f;
         r += player.GetAxis("Right Horizontal");
         return Mathf.Clamp(r, -1.0f, 1.0f);
     }
 
-    public static float RightVerticalAxis() {
+    public static float RightVerticalAxis()
+    {
         float r = 0.0f;
         r += player.GetAxis("Right Vertical");
         return Mathf.Clamp(r, -1.0f, 1.0f);
@@ -39,7 +44,8 @@ public static class InputManager {
      * Buttons
      */
 
-    public static bool ActionButtonDown() {
+    public static bool ActionButtonDown()
+    {
         /*
          * PC: U
          * PS: Square, joystick button 0
@@ -49,7 +55,8 @@ public static class InputManager {
         return player.GetButtonDown("Action");
     }
 
-    public static bool JumpButtonDown() {
+    public static bool JumpButtonDown()
+    {
         /*
          * PC: Space
          * PS: X, joystick button 1
@@ -59,7 +66,8 @@ public static class InputManager {
         return player.GetButtonDown("Jump");
     }
 
-    public static bool BrakeButtonDown() {
+    public static bool BrakeButtonDown()
+    {
         /*
          * PC: F
          * PS: Circle, joystick button 2
@@ -73,7 +81,8 @@ public static class InputManager {
      * Triggers
      */
 
-    public static bool ThrottleDownButtonDown() {
+    public static bool ThrottleDownButtonDown()
+    {
         /*
          * PC: Q
          * PS: L2, joystick button 6, or 4th Axis
@@ -83,11 +92,13 @@ public static class InputManager {
         return player.GetButtonDown("Left Trigger");
     }
 
-    public static bool ThrottleDownButtonUp() {
+    public static bool ThrottleDownButtonUp()
+    {
         return player.GetButtonUp("Left Trigger");
     }
 
-    public static bool ThrottleUpButtonDown() {
+    public static bool ThrottleUpButtonDown()
+    {
         /*
          * PC: E
          * PS: R2, joystick button 7 or 5th Axis
@@ -97,7 +108,8 @@ public static class InputManager {
         return player.GetButtonDown("Right Trigger");
     }
 
-    public static bool ThrottleUpButtonUp() {
+    public static bool ThrottleUpButtonUp()
+    {
         return player.GetButtonUp("Right Trigger");
     }
 }

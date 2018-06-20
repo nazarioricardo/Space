@@ -11,7 +11,8 @@ using UnityEngine;
  * 
  */
 
-public class ShipController : MonoBehaviour {
+public class ShipController : MonoBehaviour
+{
 
     [Header("Ship Controller Settings")]
 
@@ -26,9 +27,11 @@ public class ShipController : MonoBehaviour {
     public float RollAcceleration = 0.5f;
     [Tooltip("Speed of vertical turning")]
     public float VerticalTurnSpeed = 60;
-    [Tooltip("Vertical turn accelerations")] [Range(0f, 1f)]
+    [Tooltip("Vertical turn accelerations")]
+    [Range(0f, 1f)]
     public float VerticalTurnAcceleration = 0.5f;
-    [Tooltip("How much the camera lags behind ship during accelerations")][Range(0f, 1f)]
+    [Tooltip("How much the camera lags behind ship during accelerations")]
+    [Range(0f, 1f)]
     public float CameraLag = 0.95f;
 
     private Transform _camTarget;
@@ -36,15 +39,17 @@ public class ShipController : MonoBehaviour {
     private float _prevVert, _prevRoll;
     private Camera _cam;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start()
+    {
         // initialize children links
         _cam = GetComponentInChildren<Camera>();
         _camTarget = transform.Find("cam-target");
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
         // translate forward with the camera attached
         transform.Translate(Vector3.forward * Speed * Time.deltaTime);
 
@@ -67,5 +72,5 @@ public class ShipController : MonoBehaviour {
         // lerp the camera back to its correct position
         _cam.transform.localPosition = Vector3.Lerp(_cam.transform.localPosition, _camTarget.transform.localPosition, 1f - CameraLag);
         _cam.transform.localRotation = Quaternion.Lerp(_cam.transform.localRotation, _camTarget.transform.localRotation, 1f - CameraLag);
-	}
+    }
 }

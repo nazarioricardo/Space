@@ -5,56 +5,52 @@ using UnityEngine.UI;
 using UnityStandardAssets.Cameras;
 using UnityStandardAssets.Characters.ThirdPerson;
 
-public class PilotShip : MonoBehaviour {
+public class PilotShip : MonoBehaviour
+{
 
-	// TODO: This is the next class that should be refactored.
+    // TODO: This is the next class that should be refactored.
 
-	// UI
-	public Canvas canvas;
-	public Text modeLabel;
-	public Text thrustLabel;
-	public Text speedLabel;
+    // UI
+    public Canvas canvas;
+    public Text modeLabel;
+    public Text thrustLabel;
+    public Text speedLabel;
 
-	// Camera
-	public Vector3 defaultCameraRigPosition;
-	public Vector3 defaultCameraPivotPosition;
-	public Vector3 defaultCameraPosition;
-	private GameObject cameraRig;
-	private GameObject cameraPivot;
-	private Camera mainCamera;
+    // Camera
+    private PilotCamController pilotCamController;
 
-	// Player Interactions
-	public Component pilotPosition;
-	public Component pilotExitPosition;
-	public bool isWalkable;
+    // Player Interactions
+    public Component pilotPosition;
+    public Component pilotExitPosition;
+    public bool isWalkable;
 
-	// Axes
-	private float rotationY = 0.0f; // rotation around the up/y axis
-	private float rotationX = 0.0f; // rotation around the right/x axis
-	private float rotationZ = 0.0f;
+    // Axes
+    private float rotationY = 0.0f; // rotation around the up/y axis
+    private float rotationX = 0.0f; // rotation around the right/x axis
+    private float rotationZ = 0.0f;
 
-	// Movement Modifiers
-	public float sensitivityX = 60.0f;
-	public float sensitivityY = 60.0f;
-	public float sensitivityZ = 0.5f;
+    // Movement Modifiers
+    public float sensitivityX = 60.0f;
+    public float sensitivityY = 60.0f;
+    public float sensitivityZ = 0.5f;
     public float rollSpeed = 90;
-	public float acceleration = 50f;
-	public float brakeModifier = 20f;
+    public float acceleration = 50f;
+    public float brakeModifier = 20f;
 
-	public float cruiseSpeed = 60f;
-	public float attackSpeed = 80f;
+    public float cruiseSpeed = 60f;
+    public float attackSpeed = 80f;
 
     private GameObject hull;
     private Rigidbody rb;
 
-	// Player Management Props
-	private GameObject pilot;
+    // Player Management Props
+    private GameObject pilot;
 
-	// Ship Movement
-	private enum ThrustMode { Off, Free, Hover, Cruise, Reverse }
-	private ThrustMode activeThrustMode;
-	private Vector3 movement;
-	
+    // Ship Movement
+    private enum ThrustMode { Off, Free, Hover, Cruise, Reverse }
+    private ThrustMode activeThrustMode;
+    private Vector3 movement;
+
     private float thrust = 0.0f;
     private float maxThrust = 400.0f;
     private float minThrust = -100.0f;
@@ -73,19 +69,22 @@ public class PilotShip : MonoBehaviour {
 
     private float currentSpeed = 0.0f;
 
-	void Start () {
-		Debug.Log ("Starting pilot controller");
+    void Start()
+    {
+        Debug.Log("Starting pilot controller");
         hull = transform.GetChild(0).gameObject;
         rb = hull.GetComponent<Rigidbody>();
-		activeThrustMode = ThrustMode.Off;
-		modeLabel.text = "Off";
-	}
+        activeThrustMode = ThrustMode.Off;
+        modeLabel.text = "Off";
+    }
 
-	void Update() {
+    void Update()
+    {
         ManageThrustMode();
-	}
-	
-	void FixedUpdate() {
+    }
+
+    void FixedUpdate()
+    {
         if (activeThrustMode == ThrustMode.Off)
             return;
 
@@ -101,11 +100,13 @@ public class PilotShip : MonoBehaviour {
         speedLabel.text = currentSpeed.ToString();
         thrustLabel.text = thrust.ToString();
 
-	}
+    }
 
-    void ManageThrustMode() {
+    void ManageThrustMode()
+    {
 
-        if (activeThrustMode == ThrustMode.Hover) {
+        if (activeThrustMode == ThrustMode.Hover)
+        {
             if (InputManager.ThrottleDownButtonUp())
                 SetCruise();
 
@@ -114,16 +115,19 @@ public class PilotShip : MonoBehaviour {
         }
 
         if (activeThrustMode == ThrustMode.Off && InputManager.ThrottleUpButtonDown() ||
-            activeThrustMode == ThrustMode.Free && InputManager.ThrottleUpButtonDown()) {
+            activeThrustMode == ThrustMode.Free && InputManager.ThrottleUpButtonDown())
+        {
             SetCruise();
         }
 
         if (activeThrustMode == ThrustMode.Off && InputManager.ThrottleDownButtonDown() ||
-            activeThrustMode == ThrustMode.Free && InputManager.ThrottleDownButtonDown()) {
+            activeThrustMode == ThrustMode.Free && InputManager.ThrottleDownButtonDown())
+        {
             SetReverse();
         }
 
-        if (activeThrustMode == ThrustMode.Cruise) {
+        if (activeThrustMode == ThrustMode.Cruise)
+        {
             if (InputManager.ThrottleUpButtonUp())
                 SetFree();
 
@@ -131,7 +135,8 @@ public class PilotShip : MonoBehaviour {
                 SetHover();
         }
 
-        if (activeThrustMode == ThrustMode.Reverse) {
+        if (activeThrustMode == ThrustMode.Reverse)
+        {
             if (InputManager.ThrottleDownButtonUp())
                 SetFree();
 
@@ -143,31 +148,36 @@ public class PilotShip : MonoBehaviour {
             SetHover();
     }
 
-    void SetFree() {
+    void SetFree()
+    {
         activeThrustMode = ThrustMode.Free;
         modeLabel.text = "Free";
         sThrust = 0.0f;
     }
 
-    void SetHover() {
+    void SetHover()
+    {
         activeThrustMode = ThrustMode.Hover;
         modeLabel.text = "Hover";
         StablizeFromTumble();
     }
 
-    void SetCruise() {
+    void SetCruise()
+    {
         activeThrustMode = ThrustMode.Cruise;
         modeLabel.text = "Cruise";
         sThrust = 0.0f;
     }
 
-    void SetReverse() {
+    void SetReverse()
+    {
         activeThrustMode = ThrustMode.Reverse;
         modeLabel.text = "Reverse";
         sThrust = 0.0f;
     }
 
-    void Throttle() {
+    void Throttle()
+    {
         if (activeThrustMode == ThrustMode.Hover || activeThrustMode == ThrustMode.Free)
             return;
 
@@ -178,12 +188,13 @@ public class PilotShip : MonoBehaviour {
 
         if (activeThrustMode == ThrustMode.Reverse)
             target = Mathf.Clamp(thrust - acceleration * Time.deltaTime, minThrust, maxThrust);
-        
+
         thrust = Mathf.Lerp(thrust, target, 0.5f);
         transform.position += transform.forward * thrust * Time.deltaTime;
     }
 
-    void Elevate() {
+    void Elevate()
+    {
         float yAxis = InputManager.LeftVerticalAxis();
         float target = 0.0f;
 
@@ -203,7 +214,8 @@ public class PilotShip : MonoBehaviour {
         transform.position += transform.up * vThrust * Time.deltaTime;
     }
 
-    void PitchYaw() {
+    void PitchYaw()
+    {
         if (activeThrustMode == ThrustMode.Off)
             return;
 
@@ -211,7 +223,8 @@ public class PilotShip : MonoBehaviour {
         Yaw();
     }
 
-    void Pitch() {
+    void Pitch()
+    {
         float yAxis = -InputManager.RightVerticalAxis();
         float target = yAxis * sensitivityY * Time.deltaTime;
         rotationY = Mathf.Lerp(rotationY, target, 5 * Time.deltaTime);
@@ -219,7 +232,8 @@ public class PilotShip : MonoBehaviour {
         transform.Rotate(localRotation);
     }
 
-    void Yaw() {
+    void Yaw()
+    {
         float xAxis = InputManager.RightHorizontalAxis();
         float target = xAxis * sensitivityX * Time.deltaTime;
         rotationX = Mathf.Lerp(rotationX, target, 5 * Time.deltaTime);
@@ -228,16 +242,18 @@ public class PilotShip : MonoBehaviour {
         Bank(xAxis);
     }
 
-    void Roll() {
+    void Roll()
+    {
         if (activeThrustMode == ThrustMode.Hover)
             return;
-        
+
         float zAxis = InputManager.LeftHorizontalAxis() * -1f * rollSpeed;
-        rotationZ = Mathf.Lerp(rotationZ, zAxis, 5 * Time.deltaTime);        
+        rotationZ = Mathf.Lerp(rotationZ, zAxis, 5 * Time.deltaTime);
         transform.Rotate(new Vector3(0.0f, 0.0f, rotationZ) * Time.deltaTime);
     }
 
-    void FreeCruise() {
+    void FreeCruise()
+    {
         if (activeThrustMode != ThrustMode.Free)
             return;
 
@@ -253,7 +269,8 @@ public class PilotShip : MonoBehaviour {
         transform.position += transform.forward * thrust * Time.deltaTime;
     }
 
-    void Hover() {
+    void Hover()
+    {
         if (activeThrustMode != ThrustMode.Hover)
             return;
 
@@ -271,18 +288,19 @@ public class PilotShip : MonoBehaviour {
         transform.position += transform.forward * thrust * Time.deltaTime;
     }
 
-    void Strafe() {
+    void Strafe()
+    {
         float xAxis = InputManager.LeftHorizontalAxis();
         float target = 0.0f;
         if (xAxis > 0)
             target = Mathf.Clamp(sThrust + acceleration * Time.deltaTime, minS, maxS);
-        
+
         if (xAxis < 0)
             target = Mathf.Clamp(sThrust - acceleration * Time.deltaTime, minS, maxS);
-        
+
         if (xAxis == 0.0f && sThrust > 0)
             target = Mathf.Clamp(sThrust - acceleration * Time.deltaTime, 0, maxS);
-        
+
         if (xAxis == 0.0f && sThrust < 0)
             target = Mathf.Clamp(sThrust + acceleration * Time.deltaTime, minS, 0);
 
@@ -291,7 +309,8 @@ public class PilotShip : MonoBehaviour {
         transform.position += transform.right * sThrust * Time.deltaTime;
     }
 
-    void Bank(float xMovement) {
+    void Bank(float xMovement)
+    {
         /*
          * Turn left
          * negative xMovement
@@ -309,42 +328,48 @@ public class PilotShip : MonoBehaviour {
         hull.transform.localEulerAngles = rotation;
     }
 
-    void StablizeFromTumble() {
+    void StablizeFromTumble()
+    {
         rb.angularVelocity = Vector3.zero;
     }
 
-	public void SetPilot (GameObject player) {
-		pilot = player;
-		pilot.transform.localPosition = pilotPosition.transform.localPosition;
-		pilot.transform.localEulerAngles = new Vector3 (0, 0, 0);
+    public void SetPilot(GameObject player)
+    {
+        pilot = player;
+        pilot.transform.localPosition = pilotPosition.transform.localPosition;
+        pilot.transform.localEulerAngles = new Vector3(0, 0, 0);
         SetCameraPosition();
     }
 
-    public void RemovePilot () {
-		pilot.transform.localPosition = pilotExitPosition.transform.localPosition;
-		pilot.transform.localEulerAngles = new Vector3 (0, 0, 0);
-		pilot = null;
-	}
+    public void RemovePilot()
+    {
+        pilot.transform.localPosition = pilotExitPosition.transform.localPosition;
+        pilot.transform.localEulerAngles = new Vector3(0, 0, 0);
+        pilot = null;
+    }
 
-	public void SetCameraRig (GameObject rig) {
+    public void SetCameraRig(GameObject rig)
+    {
         Debug.Log("Setting rig: " + rig);
-		cameraRig = rig;
-		cameraPivot = cameraRig.transform.GetChild(0).gameObject;
-		mainCamera = cameraPivot.transform.GetChild (0).gameObject.GetComponent<Camera> ();
-	}
+        cameraRig = rig;
+        cameraPivot = cameraRig.transform.GetChild(0).gameObject;
+        mainCamera = cameraPivot.transform.GetChild(0).gameObject.GetComponent<Camera>();
+    }
 
-    public void RemoveCameraRig () {
+    public void RemoveCameraRig()
+    {
         cameraRig = null;
         cameraPivot = null;
         mainCamera = null;
     }
 
-	void SetCameraPosition () {
-		cameraRig.transform.SetParent (gameObject.transform);
-		cameraRig.transform.localScale = new Vector3 (1, 1, 1);
-		cameraRig.transform.localPosition = defaultCameraRigPosition;
-		cameraPivot.transform.localPosition = defaultCameraPivotPosition;
-		mainCamera.transform.localPosition = defaultCameraPosition;
-		mainCamera.transform.localEulerAngles = new Vector3 (5, 0, 0);
-	}
+    void SetCameraPosition()
+    {
+        cameraRig.transform.SetParent(gameObject.transform);
+        cameraRig.transform.localScale = new Vector3(1, 1, 1);
+        cameraRig.transform.localPosition = defaultCameraRigPosition;
+        cameraPivot.transform.localPosition = defaultCameraPivotPosition;
+        mainCamera.transform.localPosition = defaultCameraPosition;
+        mainCamera.transform.localEulerAngles = new Vector3(5, 0, 0);
+    }
 }
