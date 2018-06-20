@@ -171,32 +171,35 @@ public class PilotShip : MonoBehaviour {
         if (activeThrustMode == ThrustMode.Hover || activeThrustMode == ThrustMode.Free)
             return;
 
+        float target = 0.0f;
+
         if (activeThrustMode == ThrustMode.Cruise)
-            thrust = Mathf.Clamp(thrust + acceleration * Time.deltaTime, minThrust, maxThrust);
+            target = Mathf.Clamp(thrust + acceleration * Time.deltaTime, minThrust, maxThrust);
 
         if (activeThrustMode == ThrustMode.Reverse)
-            thrust = Mathf.Clamp(thrust - acceleration * Time.deltaTime, minThrust, maxThrust);
+            target = Mathf.Clamp(thrust - acceleration * Time.deltaTime, minThrust, maxThrust);
         
+        thrust = Mathf.Lerp(thrust, target, 0.5f);
         transform.position += transform.forward * thrust * Time.deltaTime;
     }
 
     void Elevate() {
         float yAxis = InputManager.LeftVerticalAxis();
+        float target = 0.0f;
 
         if (yAxis > 0)
-            vThrust = Mathf.Clamp(vThrust + acceleration * Time.deltaTime, minV, maxV);
-        //rb.AddRelativeForce(0.0f, 100.0f, 0.0f);
+            target = Mathf.Clamp(vThrust + acceleration * Time.deltaTime, minV, maxV);
 
         if (yAxis < 0)
-            vThrust = Mathf.Clamp(vThrust - acceleration * Time.deltaTime, minV, maxV);
-        //rb.AddRelativeForce(0.0f, -100.0f, 0.0f);
+            target = Mathf.Clamp(vThrust - acceleration * Time.deltaTime, minV, maxV);
 
         if (yAxis == 0.0f && vThrust > 0)
-            vThrust = Mathf.Clamp(vThrust - acceleration * Time.deltaTime, 0, maxV);
+            target = Mathf.Clamp(vThrust - acceleration * Time.deltaTime, 0, maxV);
 
         if (yAxis == 0.0f && vThrust < 0)
-            vThrust = Mathf.Clamp(vThrust + acceleration * Time.deltaTime, minV, 0);
-        
+            target = Mathf.Clamp(vThrust + acceleration * Time.deltaTime, minV, 0);
+
+        vThrust = Mathf.Lerp(vThrust, target, 5 * Time.deltaTime);
         transform.position += transform.up * vThrust * Time.deltaTime;
     }
 
@@ -210,14 +213,16 @@ public class PilotShip : MonoBehaviour {
 
     void Pitch() {
         float yAxis = -InputManager.RightVerticalAxis();
-        rotationY = yAxis * sensitivityY * Time.deltaTime;
+        float target = yAxis * sensitivityY * Time.deltaTime;
+        rotationY = Mathf.Lerp(rotationY, target, 5 * Time.deltaTime);
         Vector3 localRotation = new Vector3(rotationY, 0.0f, 0.0f);
         transform.Rotate(localRotation);
     }
 
     void Yaw() {
         float xAxis = InputManager.RightHorizontalAxis();
-        rotationX = xAxis * sensitivityX * Time.deltaTime;
+        float target = xAxis * sensitivityX * Time.deltaTime;
+        rotationX = Mathf.Lerp(rotationX, target, 5 * Time.deltaTime);
         Vector3 localRotation = new Vector3(0.0f, rotationX, 0.0f);
         transform.Rotate(localRotation);
         Bank(xAxis);
@@ -228,7 +233,7 @@ public class PilotShip : MonoBehaviour {
             return;
         
         float zAxis = InputManager.LeftHorizontalAxis() * -1f * rollSpeed;
-        rotationZ = Mathf.Lerp(rotationZ, zAxis, sensitivityZ);        
+        rotationZ = Mathf.Lerp(rotationZ, zAxis, 5 * Time.deltaTime);        
         transform.Rotate(new Vector3(0.0f, 0.0f, rotationZ) * Time.deltaTime);
     }
 
@@ -236,12 +241,15 @@ public class PilotShip : MonoBehaviour {
         if (activeThrustMode != ThrustMode.Free)
             return;
 
+        float target = 0.0f;
+
         if (thrust > 0)
-            thrust = Mathf.Clamp(thrust - 10f * Time.deltaTime, minThrust, maxThrust);
+            target = Mathf.Clamp(thrust - 10f * Time.deltaTime, minThrust, maxThrust);
 
         if (thrust < 0)
-            thrust = Mathf.Clamp(thrust + 10f * Time.deltaTime, minThrust, maxThrust);
+            target = Mathf.Clamp(thrust + 10f * Time.deltaTime, minThrust, maxThrust);
 
+        thrust = Mathf.Lerp(thrust, target, 5 * Time.deltaTime);
         transform.position += transform.forward * thrust * Time.deltaTime;
     }
 
@@ -251,30 +259,35 @@ public class PilotShip : MonoBehaviour {
 
         Strafe();
 
+        float target = 0.0f;
+
         if (thrust > 0)
-            thrust = Mathf.Clamp(thrust - 20f * Time.deltaTime, minThrust, maxThrust);
+            target = Mathf.Clamp(thrust - 20f * Time.deltaTime, minThrust, maxThrust);
 
         if (thrust < 0)
-            thrust = Mathf.Clamp(thrust + 20f * Time.deltaTime, minThrust, maxThrust);
+            target = Mathf.Clamp(thrust + 20f * Time.deltaTime, minThrust, maxThrust);
 
+        thrust = Mathf.Lerp(thrust, target, 5 * Time.deltaTime);
         transform.position += transform.forward * thrust * Time.deltaTime;
     }
 
     void Strafe() {
         float xAxis = InputManager.LeftHorizontalAxis();
+        float target = 0.0f;
         if (xAxis > 0)
-            sThrust = Mathf.Clamp(sThrust + acceleration * Time.deltaTime, minS, maxS);
+            target = Mathf.Clamp(sThrust + acceleration * Time.deltaTime, minS, maxS);
         
         if (xAxis < 0)
-            sThrust = Mathf.Clamp(sThrust - acceleration * Time.deltaTime, minS, maxS);
+            target = Mathf.Clamp(sThrust - acceleration * Time.deltaTime, minS, maxS);
         
         if (xAxis == 0.0f && sThrust > 0)
-            sThrust = Mathf.Clamp(sThrust - acceleration * Time.deltaTime, 0, maxS);
+            target = Mathf.Clamp(sThrust - acceleration * Time.deltaTime, 0, maxS);
         
         if (xAxis == 0.0f && sThrust < 0)
-            sThrust = Mathf.Clamp(sThrust + acceleration * Time.deltaTime, minS, 0);
+            target = Mathf.Clamp(sThrust + acceleration * Time.deltaTime, minS, 0);
 
         Bank(xAxis);
+        sThrust = Mathf.Lerp(sThrust, target, 5 * Time.deltaTime);
         transform.position += transform.right * sThrust * Time.deltaTime;
     }
 
@@ -289,15 +302,11 @@ public class PilotShip : MonoBehaviour {
          * negative bank
          */
 
-        bank = Mathf.Lerp(bank, -xMovement * 45 * Time.deltaTime * thrust / 10, Time.deltaTime * 2);
+        bank = Mathf.Lerp(bank, -xMovement * 70 * Time.deltaTime * thrust / 10, Time.deltaTime * 2);
         Debug.Log("Bank: " + bank);
         Vector3 rotation = new Vector3(0.0f, 0.0f, bank);
 
         hull.transform.localEulerAngles = rotation;
-    }
-
-    void StrafeRoll() {
-        
     }
 
     void StablizeFromTumble() {
