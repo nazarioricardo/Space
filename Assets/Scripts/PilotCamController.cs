@@ -14,7 +14,7 @@ public class PilotCamController : MonoBehaviour
 
     private GameObject rig;
     private GameObject pivot;
-    private Camera camera;
+    private Camera cam;
 
     private GameObject hull;
 
@@ -41,7 +41,7 @@ public class PilotCamController : MonoBehaviour
 
         rig = rigObject;
         pivot = rig.transform.Find("Pivot").gameObject;
-        camera = pivot.transform.Find("MainCamera").gameObject.GetComponent<Camera>();
+        cam = pivot.transform.Find("MainCamera").gameObject.GetComponent<Camera>();
         SetCameraPosition();
     }
 
@@ -49,7 +49,7 @@ public class PilotCamController : MonoBehaviour
     {
         rig = null;
         pivot = null;
-        camera = null;
+        cam = null;
     }
 
     void SetCameraPosition()
@@ -58,7 +58,7 @@ public class PilotCamController : MonoBehaviour
         rig.transform.localScale = new Vector3(1, 1, 1);
         rig.transform.localPosition = defaultCameraRigPosition;
         pivot.transform.localPosition = defaultCameraPivotPosition;
-        camera.transform.localPosition = defaultCameraPosition;
-        camera.transform.localEulerAngles = defaultCameraRotation;
+        cam.transform.localPosition = defaultCameraPosition;
+        cam.transform.localEulerAngles = defaultCameraRotation;
     }
 }
