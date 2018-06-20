@@ -17,6 +17,12 @@ public class PilotShip : MonoBehaviour
     public Text speedLabel;
 
     // Camera
+    public Vector3 defaultCameraRigPosition;
+    public Vector3 defaultCameraPivotPosition;
+    public Vector3 defaultCameraPosition;
+    private GameObject cameraRig;
+    private GameObject cameraPivot;
+    private Camera mainCamera;
     private PilotCamController pilotCamController;
 
     // Player Interactions
@@ -74,6 +80,7 @@ public class PilotShip : MonoBehaviour
         Debug.Log("Starting pilot controller");
         hull = transform.GetChild(0).gameObject;
         rb = hull.GetComponent<Rigidbody>();
+        pilotCamController = GetComponent<PilotCamController>();
         activeThrustMode = ThrustMode.Off;
         modeLabel.text = "Off";
     }
@@ -338,7 +345,11 @@ public class PilotShip : MonoBehaviour
         pilot = player;
         pilot.transform.localPosition = pilotPosition.transform.localPosition;
         pilot.transform.localEulerAngles = new Vector3(0, 0, 0);
-        SetCameraPosition();
+
+        pilotCamController = GetComponent<PilotCamController>();
+        pilotCamController.enabled = true;
+        pilotCamController.SetCameraRig(pilot.transform.GetChild(1).gameObject);
+        //SetCameraPosition();
     }
 
     public void RemovePilot()
@@ -346,6 +357,8 @@ public class PilotShip : MonoBehaviour
         pilot.transform.localPosition = pilotExitPosition.transform.localPosition;
         pilot.transform.localEulerAngles = new Vector3(0, 0, 0);
         pilot = null;
+        pilotCamController.RemoveCameraRig();
+        pilotCamController.enabled = false;
     }
 
     public void SetCameraRig(GameObject rig)

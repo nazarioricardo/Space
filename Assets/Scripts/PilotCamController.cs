@@ -9,9 +9,9 @@ public class PilotCamController : MonoBehaviour
     public Vector3 defaultCameraPivotPosition;
     public Vector3 defaultCameraPosition;
 
-    private GameObject cameraRig;
-    private GameObject cameraPivot;
-    private Camera mainCamera;
+    private GameObject rig;
+    private GameObject pivot;
+    private Camera camera;
 
     // Use this for initialization
     void Start()
@@ -30,28 +30,29 @@ public class PilotCamController : MonoBehaviour
 
     }
 
-    public void SetCameraRig(GameObject rig)
+    public void SetCameraRig(GameObject rigObject)
     {
-        Debug.Log("Setting rig: " + rig);
-        cameraRig = rig;
-        cameraPivot = cameraRig.transform.GetChild(0).gameObject;
-        mainCamera = cameraPivot.transform.GetChild(0).gameObject.GetComponent<Camera>();
+        Debug.Log("Setting rig: " + rigObject);
+        rig = rigObject;
+        pivot = rig.transform.GetChild(0).gameObject;
+        camera = pivot.transform.GetChild(0).gameObject.GetComponent<Camera>();
+        SetCameraPosition();
     }
 
     public void RemoveCameraRig()
     {
-        cameraRig = null;
-        cameraPivot = null;
-        mainCamera = null;
+        rig = null;
+        pivot = null;
+        camera = null;
     }
 
     void SetCameraPosition()
     {
-        cameraRig.transform.SetParent(gameObject.transform);
-        cameraRig.transform.localScale = new Vector3(1, 1, 1);
-        cameraRig.transform.localPosition = defaultCameraRigPosition;
-        cameraPivot.transform.localPosition = defaultCameraPivotPosition;
-        mainCamera.transform.localPosition = defaultCameraPosition;
-        mainCamera.transform.localEulerAngles = new Vector3(5, 0, 0);
+        rig.transform.SetParent(gameObject.transform);
+        rig.transform.localScale = new Vector3(1, 1, 1);
+        rig.transform.localPosition = defaultCameraRigPosition;
+        pivot.transform.localPosition = defaultCameraPivotPosition;
+        camera.transform.localPosition = defaultCameraPosition;
+        camera.transform.localEulerAngles = new Vector3(5, 0, 0);
     }
 }
