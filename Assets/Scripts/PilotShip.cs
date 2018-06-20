@@ -104,6 +104,7 @@ public class PilotShip : MonoBehaviour {
 	}
 
     void ManageThrustMode() {
+
         if (activeThrustMode == ThrustMode.Hover) {
             if (InputManager.ThrottleDownButtonUp())
                 SetCruise();
@@ -145,6 +146,7 @@ public class PilotShip : MonoBehaviour {
     void SetFree() {
         activeThrustMode = ThrustMode.Free;
         modeLabel.text = "Free";
+        sThrust = 0.0f;
     }
 
     void SetHover() {
@@ -156,11 +158,13 @@ public class PilotShip : MonoBehaviour {
     void SetCruise() {
         activeThrustMode = ThrustMode.Cruise;
         modeLabel.text = "Cruise";
+        sThrust = 0.0f;
     }
 
     void SetReverse() {
         activeThrustMode = ThrustMode.Reverse;
         modeLabel.text = "Reverse";
+        sThrust = 0.0f;
     }
 
     void Throttle() {
