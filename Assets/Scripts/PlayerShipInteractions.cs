@@ -161,7 +161,6 @@ public class PlayerShipInteractions : MonoBehaviour
     {
         Debug.Log("Camera Rig: " + cameraRig);
 
-        ResetAutoCam(cameraRig.GetComponent<AutoCam>());
         cameraRig.transform.SetParent(gameObject.transform);
         cameraRig.transform.localScale = new Vector3(1, 1, 1);
         cameraRig.transform.localPosition = defaultCameraRigPosition;
@@ -170,11 +169,5 @@ public class PlayerShipInteractions : MonoBehaviour
         GameObject camera = pivot.transform.Find("MainCamera").gameObject;
         camera.transform.localPosition = new Vector3(0, 0, 0);
         camera.transform.localEulerAngles = new Vector3(5, 0, 0);
-    }
-
-    void ResetAutoCam(AutoCam autoCam)
-    {
-        autoCam.enabled = false;
-        autoCam.SetTarget(gameObject.transform);
     }
 }

@@ -4107,7 +4107,6 @@ GameObject:
   m_Component:
   - component: {fileID: 982492165}
   - component: {fileID: 982492171}
-  - component: {fileID: 982492170}
   - component: {fileID: 982492169}
   - component: {fileID: 982492168}
   - component: {fileID: 982492167}
@@ -4159,19 +4158,11 @@ AudioListener:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 982492164}
-  m_Enabled: 0
+  m_Enabled: 1
 --- !u!124 &982492169
 Behaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 12400000, guid: baec086904791744185aaa07a6cf55c2,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 982492164}
-  m_Enabled: 1
---- !u!92 &982492170
-Behaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 9200000, guid: baec086904791744185aaa07a6cf55c2,
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 982492164}
@@ -5797,8 +5788,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1554660340}
   - component: {fileID: 1554660343}
-  - component: {fileID: 1554660342}
-  - component: {fileID: 1554660341}
   m_Layer: 0
   m_Name: MultipurposeCameraRig
   m_TagString: Untagged
@@ -5820,47 +5809,6 @@ Transform:
   m_Father: {fileID: 1053982149}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1554660341
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400000, guid: baec086904791744185aaa07a6cf55c2,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1554660339}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a8d3968294210ba4a9d2bb96dfa74a16, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Target: {fileID: 0}
-  m_AutoTargetPlayer: 0
-  m_UpdateType: 0
-  m_MoveSpeed: 80
-  m_TurnSpeed: 0.2
-  m_RollSpeed: 0.8
-  m_FollowVelocity: 0
-  m_FollowTilt: 1
-  m_SpinTurnLimit: 90
-  m_TargetVelocityLowerLimit: 4
-  m_SmoothTurnTime: 0.2
---- !u!114 &1554660342
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400002, guid: baec086904791744185aaa07a6cf55c2,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1554660339}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 94b04ec3bda6b7747aa53936ef3b0ae2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  clipMoveTime: 0.05
-  returnTime: 0.4
-  sphereCastRadius: 0.1
-  visualiseInEditor: 0
-  closestDistance: 0.5
-  dontClipTag: Ship
 --- !u!54 &1554660343
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7163,6 +7111,7 @@ MonoBehaviour:
   defaultCameraPivotPosition: {x: 0, y: 0, z: 0}
   defaultCameraPosition: {x: 0, y: 4, z: -20}
   defaultCameraRotation: {x: 5, y: 0, z: 0}
+  cameraLag: 0.95
 --- !u!4 &1917725277 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: e975a8890e0a14e799095ae4df167140, type: 3}

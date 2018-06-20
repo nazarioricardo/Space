@@ -23,12 +23,10 @@ public class CharacterMovement : MonoBehaviour
     private CharacterController controller;
     private Vector3 velocity;
     private float gravity = -9.81f;
-    private float groundDistance;
 
     void Start()
     {
         controller = GetComponent<CharacterController>();
-        groundDistance = transform.lossyScale.y / 2;
         groundChecker = transform.GetChild(0);
         InitializeRotation();
     }

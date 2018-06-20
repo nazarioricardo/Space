@@ -320,9 +320,7 @@ public class PilotShip : MonoBehaviour
          */
 
         bank = Mathf.Lerp(bank, -xMovement * 70 * Time.deltaTime * thrust / 10, Time.deltaTime * 2);
-        Debug.Log("Bank: " + bank);
         Vector3 rotation = new Vector3(0.0f, 0.0f, bank);
-
         hull.transform.localEulerAngles = rotation;
     }
 
