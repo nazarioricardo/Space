@@ -340,23 +340,11 @@ public class PilotShip : MonoBehaviour {
     }
 
 	void SetCameraPosition () {
-		// Set Auto Cam Settings
-		SetAutoCam (cameraRig.GetComponent<AutoCam> ());
-
 		cameraRig.transform.SetParent (gameObject.transform);
 		cameraRig.transform.localScale = new Vector3 (1, 1, 1);
 		cameraRig.transform.localPosition = defaultCameraRigPosition;
-
 		cameraPivot.transform.localPosition = defaultCameraPivotPosition;
-
 		mainCamera.transform.localPosition = defaultCameraPosition;
 		mainCamera.transform.localEulerAngles = new Vector3 (5, 0, 0);
-	}
-
-	void SetAutoCam(AutoCam autoCam) {
-		Debug.Log ("Initializing Auto Cam");
-		autoCam.SetTarget (gameObject.transform);
-		autoCam.enabled = true;
-		Debug.Log ("AutoCam target " + autoCam.Target);
 	}
 }
