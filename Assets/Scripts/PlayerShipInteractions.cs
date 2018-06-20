@@ -133,7 +133,6 @@ public class PlayerShipInteractions : MonoBehaviour
 
         characterMovement.enabled = false;
         characterController.enabled = false;
-        pilotController.SetCameraRig(cameraRig);
         pilotController.SetPilot(gameObject);
         pilotController.enabled = true;
     }
@@ -141,7 +140,6 @@ public class PlayerShipInteractions : MonoBehaviour
     void StopPilot()
     {
         pilotController.RemovePilot();
-        pilotController.RemoveCameraRig();
         pilotController.enabled = false;
         characterMovement.enabled = true;
         characterController.enabled = true;
