@@ -153,7 +153,6 @@ public class PlayerShipInteractions : MonoBehaviour
         // 		-Check if I actually need to store the trigger as a private property
         // 2. Learn Ray Casting
 
-
         if (!pilotController.isWalkable)
             ExitShip();
     }
@@ -166,9 +165,9 @@ public class PlayerShipInteractions : MonoBehaviour
         cameraRig.transform.SetParent(gameObject.transform);
         cameraRig.transform.localScale = new Vector3(1, 1, 1);
         cameraRig.transform.localPosition = defaultCameraRigPosition;
-        GameObject pivot = cameraRig.transform.GetChild(0).gameObject;
+        GameObject pivot = cameraRig.transform.Find("Pivot").gameObject;
         pivot.transform.localPosition = new Vector3(0, 0, 0);
-        GameObject camera = pivot.transform.GetChild(0).gameObject;
+        GameObject camera = pivot.transform.Find("MainCamera").gameObject;
         camera.transform.localPosition = new Vector3(0, 0, 0);
         camera.transform.localEulerAngles = new Vector3(5, 0, 0);
     }

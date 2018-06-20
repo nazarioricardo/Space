@@ -1402,9 +1402,6 @@ MonoBehaviour:
   modeLabel: {fileID: 815339482}
   thrustLabel: {fileID: 602695715}
   speedLabel: {fileID: 97513406}
-  defaultCameraRigPosition: {x: 0, y: 0, z: 0}
-  defaultCameraPivotPosition: {x: 0, y: 0, z: 0}
-  defaultCameraPosition: {x: 0, y: 700, z: -3000}
   pilotPosition: {fileID: 478639622}
   pilotExitPosition: {fileID: 981633958}
   isWalkable: 1
@@ -7165,6 +7162,7 @@ MonoBehaviour:
   defaultCameraRigPosition: {x: 0, y: 0, z: 0}
   defaultCameraPivotPosition: {x: 0, y: 0, z: 0}
   defaultCameraPosition: {x: 0, y: 4, z: -20}
+  defaultCameraRotation: {x: 5, y: 0, z: 0}
 --- !u!4 &1917725277 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: e975a8890e0a14e799095ae4df167140, type: 3}
@@ -7184,9 +7182,6 @@ MonoBehaviour:
   modeLabel: {fileID: 815339482}
   thrustLabel: {fileID: 602695715}
   speedLabel: {fileID: 97513406}
-  defaultCameraRigPosition: {x: 0, y: 0, z: 0}
-  defaultCameraPivotPosition: {x: 0, y: 0, z: 0}
-  defaultCameraPosition: {x: 0, y: 4, z: -20}
   pilotPosition: {fileID: 813530657}
   pilotExitPosition: {fileID: 1767486210}
   isWalkable: 0

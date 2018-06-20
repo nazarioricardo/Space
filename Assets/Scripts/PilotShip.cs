@@ -64,8 +64,6 @@ public class PilotShip : MonoBehaviour
     private float minS = -100.0f;
 
     private float bank = 0.0f;
-    private float maxBank = 45f;
-    private float minBank = -45f;
 
     private float currentSpeed = 0.0f;
 
@@ -100,7 +98,6 @@ public class PilotShip : MonoBehaviour
 
         speedLabel.text = currentSpeed.ToString();
         thrustLabel.text = thrust.ToString();
-
     }
 
     void ManageThrustMode()
@@ -342,7 +339,7 @@ public class PilotShip : MonoBehaviour
 
         pilotCamController = GetComponent<PilotCamController>();
         pilotCamController.enabled = true;
-        pilotCamController.SetCameraRig(pilot.transform.GetChild(1).gameObject);
+        pilotCamController.SetCameraRig(pilot.transform.Find("MultipurposeCameraRig").gameObject);
         //SetCameraPosition();
     }
 

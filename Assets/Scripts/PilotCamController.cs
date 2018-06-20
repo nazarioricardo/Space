@@ -8,15 +8,20 @@ public class PilotCamController : MonoBehaviour
     public Vector3 defaultCameraRigPosition;
     public Vector3 defaultCameraPivotPosition;
     public Vector3 defaultCameraPosition;
+    public Vector3 defaultCameraRotation;
+
+    public float cameraLag = 0.95f;
 
     private GameObject rig;
     private GameObject pivot;
     private Camera camera;
 
+    private GameObject hull;
+
     // Use this for initialization
     void Start()
     {
-
+        hull = transform.Find("Hull").gameObject;
     }
 
     // Update is called once per frame
@@ -27,15 +32,16 @@ public class PilotCamController : MonoBehaviour
 
     private void FixedUpdate()
     {
-
+ 
     }
 
     public void SetCameraRig(GameObject rigObject)
     {
         Debug.Log("Setting rig: " + rigObject);
+
         rig = rigObject;
-        pivot = rig.transform.GetChild(0).gameObject;
-        camera = pivot.transform.GetChild(0).gameObject.GetComponent<Camera>();
+        pivot = rig.transform.Find("Pivot").gameObject;
+        camera = pivot.transform.Find("MainCamera").gameObject.GetComponent<Camera>();
         SetCameraPosition();
     }
 
@@ -53,6 +59,6 @@ public class PilotCamController : MonoBehaviour
         rig.transform.localPosition = defaultCameraRigPosition;
         pivot.transform.localPosition = defaultCameraPivotPosition;
         camera.transform.localPosition = defaultCameraPosition;
-        camera.transform.localEulerAngles = new Vector3(5, 0, 0);
+        camera.transform.localEulerAngles = defaultCameraRotation;
     }
 }
