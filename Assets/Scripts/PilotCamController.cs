@@ -35,6 +35,30 @@ public class PilotCamController : MonoBehaviour
  
     }
 
+    public void Yaw(float shipYaw)
+    {
+        Vector3 currentPosition = cam.transform.localPosition;
+        Debug.Log("Cam Position " + currentPosition);
+        Vector3 targetPosition = new Vector3(currentPosition.x + shipYaw, currentPosition.y, currentPosition.z);
+        Debug.Log("Target Position " + targetPosition);
+
+        if (shipYaw == 0f)
+            targetPosition = defaultCameraPosition;
+
+        cam.transform.localPosition = Vector3.Lerp(currentPosition, targetPosition, 2f * Time.deltaTime);
+    }
+
+    public void Pitch(float shipPitch)
+    {
+        Vector3 currentPosition = cam.transform.localPosition;
+        Vector3 targetPosition = new Vector3(currentPosition.x, currentPosition.y + shipPitch, currentPosition.z);
+
+        if (shipPitch == 0f)
+            targetPosition = defaultCameraPosition;
+
+        cam.transform.localPosition = Vector3.Lerp(currentPosition, targetPosition, 2f * Time.deltaTime);
+    }
+
     public void SetCameraRig(GameObject rigObject)
     {
         Debug.Log("Setting rig: " + rigObject);
