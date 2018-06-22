@@ -103,7 +103,6 @@ public class PlayerShipInteractions : MonoBehaviour
     void EnterShip(Collider trigger)
     {
         ship = trigger.gameObject.transform.root.gameObject;
-        gameObject.transform.SetParent(ship.transform);
         pilotController = ship.GetComponent<PilotShip>();
         inShip = true;
     }

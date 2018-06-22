@@ -70,7 +70,7 @@ public class PilotShip : MonoBehaviour
     void Start()
     {
         Debug.Log("Starting pilot controller");
-        hull = transform.GetChild(0).gameObject;
+        hull = transform.Find("Hull").gameObject;
         rb = hull.GetComponent<Rigidbody>();
         pilotCamController = GetComponent<PilotCamController>();
         activeThrustMode = ThrustMode.Off;
@@ -96,6 +96,7 @@ public class PilotShip : MonoBehaviour
 
         currentSpeed = rb.velocity.magnitude;
 
+        //transform.position = hull.transform.position;
         speedLabel.text = currentSpeed.ToString();
         thrustLabel.text = thrust.ToString();
     }
@@ -157,7 +158,6 @@ public class PilotShip : MonoBehaviour
     {
         activeThrustMode = ThrustMode.Hover;
         modeLabel.text = "Hover";
-        StablizeFromTumble();
     }
 
     void SetCruise()
@@ -274,6 +274,8 @@ public class PilotShip : MonoBehaviour
         if (activeThrustMode != ThrustMode.Hover)
             return;
 
+        StabilizeFromTumble();
+
         Strafe();
 
         float target = 0.0f;
@@ -326,21 +328,28 @@ public class PilotShip : MonoBehaviour
         hull.transform.localEulerAngles = rotation;
     }
 
-    void StablizeFromTumble()
+    void StabilizeFromTumble()
     {
+        Debug.Log("Stabilizing from " + rb.angularVelocity + " and " + rb.velocity);
         rb.angularVelocity = Vector3.zero;
+        rb.velocity = Vector3.zero;
+        Debug.Log("Stabilized to " + rb.angularVelocity + " and " + rb.velocity);
+
     }
 
     public void SetPilot(GameObject player)
     {
+        // TODO: Figure out why I need to call this instead of relying on the call on Start()
+        hull = transform.Find("Hull").gameObject;
+
         pilot = player;
-        pilot.transform.localPosition = pilotPosition.transform.localPosition;
+        pilot.transform.localPosition = pilotPosition.transform.position;
         pilot.transform.localEulerAngles = new Vector3(0, 0, 0);
+        pilot.transform.SetParent(hull.transform);
 
         pilotCamController = GetComponent<PilotCamController>();
         pilotCamController.enabled = true;
         pilotCamController.SetCameraRig(pilot.transform.Find("MultipurposeCameraRig").gameObject);
-        //SetCameraPosition();
     }
 
     public void RemovePilot()

@@ -24,23 +24,10 @@ public class PilotCamController : MonoBehaviour
         hull = transform.Find("Hull").gameObject;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    private void FixedUpdate()
-    {
- 
-    }
-
     public void Yaw(float shipYaw)
     {
         Vector3 currentPosition = cam.transform.localPosition;
-        Debug.Log("Cam Position " + currentPosition);
         Vector3 targetPosition = new Vector3(currentPosition.x + shipYaw, currentPosition.y, currentPosition.z);
-        Debug.Log("Target Position " + targetPosition);
 
         if (shipYaw == 0f)
             targetPosition = defaultCameraPosition;
