@@ -96,7 +96,9 @@ public class PilotShip : MonoBehaviour
 
         currentSpeed = rb.velocity.magnitude;
 
-        //transform.position = hull.transform.position;
+        if (rb.angularVelocity != Vector3.zero || rb.velocity != Vector3.zero)
+            transform.position = hull.transform.position;
+
         speedLabel.text = currentSpeed.ToString();
         thrustLabel.text = thrust.ToString();
     }
@@ -330,11 +332,9 @@ public class PilotShip : MonoBehaviour
 
     void StabilizeFromTumble()
     {
-        Debug.Log("Stabilizing from " + rb.angularVelocity + " and " + rb.velocity);
         rb.angularVelocity = Vector3.zero;
         rb.velocity = Vector3.zero;
-        Debug.Log("Stabilized to " + rb.angularVelocity + " and " + rb.velocity);
-
+        hull.transform.localPosition = Vector3.Lerp(hull.transform.localPosition, Vector3.zero, 2f * Time.deltaTime);
     }
 
     public void SetPilot(GameObject player)
