@@ -212,6 +212,7 @@ public class PilotShip : MonoBehaviour
 
         vThrust = Mathf.Lerp(vThrust, target, 5 * Time.deltaTime);
         transform.position += transform.up * vThrust * Time.deltaTime;
+        pilotCamController.Elevate(-yAxis);
     }
 
     void PitchYaw()
@@ -230,7 +231,7 @@ public class PilotShip : MonoBehaviour
         rotationY = Mathf.Lerp(rotationY, target, 5 * Time.deltaTime);
         Vector3 localRotation = new Vector3(rotationY, 0.0f, 0.0f);
         transform.Rotate(localRotation);
-        pilotCamController.Pitch(-yAxis);
+        pilotCamController.Pitch(-yAxis, thrust / maxThrust);
     }
 
     void Yaw()
@@ -240,7 +241,7 @@ public class PilotShip : MonoBehaviour
         rotationX = Mathf.Lerp(rotationX, target, 5 * Time.deltaTime);
         Vector3 localRotation = new Vector3(0.0f, rotationX, 0.0f);
         transform.Rotate(localRotation);
-        pilotCamController.Yaw(xAxis);
+        pilotCamController.Yaw(xAxis, thrust / maxThrust);
         Bank(xAxis);
     }
 
@@ -311,6 +312,7 @@ public class PilotShip : MonoBehaviour
         Bank(xAxis);
         sThrust = Mathf.Lerp(sThrust, target, 5 * Time.deltaTime);
         transform.position += transform.right * sThrust * Time.deltaTime;
+        pilotCamController.Strafe(-xAxis);
     }
 
     void Bank(float xMovement)

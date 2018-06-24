@@ -18,34 +18,48 @@ public class PilotCamController : MonoBehaviour
 
     private GameObject hull;
 
+    private float maxMod = 3.5f;
+
     // Use this for initialization
     void Start()
     {
         hull = transform.Find("Hull").gameObject;
     }
 
-    public void Yaw(float shipYaw)
+    public void Pitch(float shipPitch, float currentThrustPercentage)
     {
         Vector3 currentPosition = cam.transform.localPosition;
-        float targetX = shipYaw * 3.5f + defaultCameraPosition.x;
-        Vector3 targetPosition = new Vector3(targetX, currentPosition.y, currentPosition.z);
-
-        //if (shipYaw == 0f)
-            //targetPosition = defaultCameraPosition;
+        float targetY = shipPitch * (currentThrustPercentage * maxMod + 1) + defaultCameraPosition.y;
+        Vector3 targetPosition = new Vector3(currentPosition.x, targetY, currentPosition.z);
 
         cam.transform.localPosition = Vector3.Lerp(currentPosition, targetPosition, 1.5f * Time.deltaTime);
     }
 
-    public void Pitch(float shipPitch)
+    public void Yaw(float shipYaw, float currentThrustPercentage)
     {
         Vector3 currentPosition = cam.transform.localPosition;
-        float targetY = shipPitch * 3.5f + defaultCameraPosition.y;
-        Vector3 targetPosition = new Vector3(currentPosition.x, targetY, currentPosition.z);
-
-        //if (shipPitch == 0f)
-            //targetPosition = defaultCameraPosition;
+        float targetX = shipYaw * (currentThrustPercentage * maxMod + 1) + defaultCameraPosition.x;
+        Vector3 targetPosition = new Vector3(targetX, currentPosition.y, currentPosition.z);
 
         cam.transform.localPosition = Vector3.Lerp(currentPosition, targetPosition, 1.5f * Time.deltaTime);
+    }
+
+    public void Strafe(float shipStrafe) 
+    {
+        Vector3 currentPosition = cam.transform.localPosition;
+        float targetX = shipStrafe + defaultCameraPosition.x;
+        Vector3 targetPosition = new Vector3(targetX, currentPosition.y, currentPosition.z);
+
+        cam.transform.localPosition = Vector3.Lerp(currentPosition, targetPosition, Time.deltaTime);
+    }
+
+    public void Elevate(float shipElevate)
+    {
+        Vector3 currentPosition = cam.transform.localPosition;
+        float targetY = shipElevate + defaultCameraPosition.y;
+        Vector3 targetPosition = new Vector3(currentPosition.x, targetY, currentPosition.z);
+
+        cam.transform.localPosition = Vector3.Lerp(currentPosition, targetPosition, Time.deltaTime);
     }
 
     public void SetCameraRig(GameObject rigObject)
