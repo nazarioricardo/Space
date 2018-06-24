@@ -332,8 +332,8 @@ public class PilotShip : MonoBehaviour
 
     void StabilizeFromTumble()
     {
-        rb.angularVelocity = Vector3.zero;
-        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.Lerp(rb.angularVelocity, Vector3.zero, 2F * Time.deltaTime);
+        rb.velocity = Vector3.Lerp(rb.velocity, Vector3.zero, 2F * Time.deltaTime);
         hull.transform.localPosition = Vector3.Lerp(hull.transform.localPosition, Vector3.zero, 2f * Time.deltaTime);
     }
 
