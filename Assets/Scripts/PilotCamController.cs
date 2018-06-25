@@ -11,19 +11,21 @@ public class PilotCamController : MonoBehaviour
     public Vector3 defaultCameraRotation;
 
     public float cameraLag = 0.95f;
+    public float yawLag = 1.5f;
+    public float pitchLag = 1.5f;
 
     private GameObject rig;
     private GameObject pivot;
     private Camera cam;
 
-    private GameObject hull;
+    private GameObject shipHull;
 
     private float maxMod = 3.5f;
 
     // Use this for initialization
     void Start()
     {
-        hull = transform.Find("Hull").gameObject;
+        shipHull = transform.Find("Hull").gameObject;
     }
 
     public void Pitch(float shipPitch, float currentThrustPercentage)
@@ -32,7 +34,7 @@ public class PilotCamController : MonoBehaviour
         float targetY = shipPitch * (currentThrustPercentage * maxMod + 1) + defaultCameraPosition.y;
         Vector3 targetPosition = new Vector3(currentPosition.x, targetY, currentPosition.z);
 
-        cam.transform.localPosition = Vector3.Lerp(currentPosition, targetPosition, 1.5f * Time.deltaTime);
+        cam.transform.localPosition = Vector3.Lerp(currentPosition, targetPosition, yawLag * Time.deltaTime);
     }
 
     public void Yaw(float shipYaw, float currentThrustPercentage)
@@ -41,7 +43,7 @@ public class PilotCamController : MonoBehaviour
         float targetX = shipYaw * (currentThrustPercentage * maxMod + 1) + defaultCameraPosition.x;
         Vector3 targetPosition = new Vector3(targetX, currentPosition.y, currentPosition.z);
 
-        cam.transform.localPosition = Vector3.Lerp(currentPosition, targetPosition, 1.5f * Time.deltaTime);
+        cam.transform.localPosition = Vector3.Lerp(currentPosition, targetPosition, pitchLag * Time.deltaTime);
     }
 
     public void Strafe(float shipStrafe) 
