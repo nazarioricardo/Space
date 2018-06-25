@@ -19,8 +19,6 @@ public class PlayerShipInteractions : MonoBehaviour
     private Collider gateTrigger;
     private Collider pilotTrigger;
 
-    private bool inGateTrigger = false;
-    private bool inCockpitTrigger = false;
     private bool inShip = false;
     private bool isPilot = false;
 
@@ -40,48 +38,31 @@ public class PlayerShipInteractions : MonoBehaviour
 
     void OnTriggerEnter(Collider trigger)
     {
-        Debug.Log("Entered Trigger " + trigger.tag);
         activeTrigger = trigger;
 
         // TODO: Change GateTrigger to a generic UseTrigger
         if (trigger.tag == "GateTrigger")
-        {
-            inGateTrigger = true;
             gateTrigger = trigger;
-        }
 
         if (trigger.tag == "CockpitTrigger")
-        {
-            inCockpitTrigger = true;
             pilotTrigger = trigger;
-        }
 
         if (trigger.tag == "EntryTrigger")
-        {
             EnterShip(trigger);
-        }
     }
 
     void OnTriggerExit(Collider trigger)
     {
-        Debug.Log("Left Trigger " + trigger.tag);
+        activeTrigger = null;
+            
         if (trigger.tag == "GateTrigger")
-        {
-            Debug.Log(trigger.tag);
-            inGateTrigger = false;
             gateTrigger = null;
-        }
 
         if (trigger.tag == "CockpitTrigger")
-        {
-            inCockpitTrigger = false;
             pilotTrigger = null;
-        }
 
         if (trigger.tag == "EntryTrigger")
-        {
             ExitShip();
-        }
     }
 
     void HandlePlayerInputs()
@@ -89,14 +70,10 @@ public class PlayerShipInteractions : MonoBehaviour
         if (InputManager.ActionButtonDown())
         {
             if (gateTrigger)
-            {
                 gateTrigger.SendMessageUpwards("OpenClose");
-            }
 
             if (pilotTrigger)
-            {
                 TogglePilot(pilotTrigger);
-            }
         }
     }
 
