@@ -19,7 +19,7 @@ public class PilotCamController : MonoBehaviour
 
     private GameObject shipHull;
 
-    private float maxMod = 3.5f;
+    private float maxCamDislocation = 3.5f;
 
     // Use this for initialization
     void Start()
@@ -30,7 +30,7 @@ public class PilotCamController : MonoBehaviour
     public void Pitch(float shipPitch, float currentThrustPercentage)
     {
         Vector3 currentPosition = cam.transform.localPosition;
-        float targetY = shipPitch * (currentThrustPercentage * maxMod + 1) + defaultCameraPosition.y;
+        float targetY = shipPitch * (currentThrustPercentage * maxCamDislocation + 1) + defaultCameraPosition.y;
         Vector3 targetPosition = new Vector3(currentPosition.x, targetY, currentPosition.z);
 
         cam.transform.localPosition = Vector3.Lerp(currentPosition, targetPosition, yawLag * Time.deltaTime);
@@ -39,7 +39,7 @@ public class PilotCamController : MonoBehaviour
     public void Yaw(float shipYaw, float currentThrustPercentage)
     {
         Vector3 currentPosition = cam.transform.localPosition;
-        float targetX = shipYaw * (currentThrustPercentage * maxMod + 1) + defaultCameraPosition.x;
+        float targetX = shipYaw * (currentThrustPercentage * maxCamDislocation + 1) + defaultCameraPosition.x;
         Vector3 targetPosition = new Vector3(targetX, currentPosition.y, currentPosition.z);
 
         cam.transform.localPosition = Vector3.Lerp(currentPosition, targetPosition, pitchLag * Time.deltaTime);
