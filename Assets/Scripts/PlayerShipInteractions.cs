@@ -19,7 +19,6 @@ public class PlayerShipInteractions : MonoBehaviour
     private Collider gateTrigger;
     private Collider pilotTrigger;
 
-    private bool inShip = false;
     private bool isPilot = false;
 
     // Use this for initialization
@@ -81,13 +80,11 @@ public class PlayerShipInteractions : MonoBehaviour
     {
         ship = trigger.gameObject.transform.root.gameObject;
         pilotController = ship.GetComponent<PilotShip>();
-        inShip = true;
     }
 
     void ExitShip()
     {
         gameObject.transform.SetParent(null);
-        inShip = false;
         ship = null;
         pilotController = null;
     }
@@ -104,8 +101,7 @@ public class PlayerShipInteractions : MonoBehaviour
 
     void StartPilot(Collider trigger)
     {
-        if (!inShip)
-            EnterShip(trigger);
+        EnterShip(trigger);
 
         characterMovement.enabled = false;
         characterController.enabled = false;
@@ -129,8 +125,7 @@ public class PlayerShipInteractions : MonoBehaviour
         // 		-Check if I actually need to store the trigger as a private property
         // 2. Learn Ray Casting
 
-        if (!pilotController.isWalkable)
-            ExitShip();
+        ExitShip();
     }
 
     void SetThirdPersonCamera()

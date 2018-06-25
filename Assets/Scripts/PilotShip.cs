@@ -22,7 +22,6 @@ public class PilotShip : MonoBehaviour
     // Player Interactions
     public Component pilotPosition;
     public Component pilotExitPosition;
-    public bool isWalkable;
 
     // Movement Modifiers
     public float yawSenstivity = 60.0f;
