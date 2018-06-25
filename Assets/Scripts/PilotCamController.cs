@@ -10,7 +10,6 @@ public class PilotCamController : MonoBehaviour
     public Vector3 defaultCameraPosition;
     public Vector3 defaultCameraRotation;
 
-    public float cameraLag = 0.95f;
     public float yawLag = 1.5f;
     public float pitchLag = 1.5f;
 
