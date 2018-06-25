@@ -13,7 +13,7 @@ public class PlayerShipInteractions : MonoBehaviour
 
     private CharacterMovement characterMovement;
     private CharacterController characterController;
-    private PilotShip pilotController;
+    private PilotController pilotController;
     private GameObject ship;
     private Collider activeTrigger;
     private Collider gateTrigger;
@@ -79,7 +79,7 @@ public class PlayerShipInteractions : MonoBehaviour
     void EnterShip(Collider trigger)
     {
         ship = trigger.gameObject.transform.root.gameObject;
-        pilotController = ship.GetComponent<PilotShip>();
+        pilotController = ship.GetComponent<PilotController>();
     }
 
     void ExitShip()

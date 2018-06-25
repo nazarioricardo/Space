@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityStandardAssets.Cameras;
 using UnityStandardAssets.Characters.ThirdPerson;
 
-public class PilotShip : MonoBehaviour
+public class PilotController : MonoBehaviour
 {
 
     // TODO: This is the next class that should be refactored.

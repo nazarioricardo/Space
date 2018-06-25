@@ -1402,9 +1402,13 @@ MonoBehaviour:
   modeLabel: {fileID: 815339482}
   thrustLabel: {fileID: 602695715}
   speedLabel: {fileID: 97513406}
+  pilotCamController: {fileID: 0}
   pilotPosition: {fileID: 478639622}
   pilotExitPosition: {fileID: 981633958}
   isWalkable: 1
+  rotationY: 0
+  rotationX: 0
+  rotationZ: 0
   sensitivityX: 0.1
   sensitivityY: 0.1
   sensitivityZ: 1
@@ -1413,6 +1417,22 @@ MonoBehaviour:
   brakeModifier: 20
   cruiseSpeed: 60
   attackSpeed: 80
+  hull: {fileID: 0}
+  rb: {fileID: 0}
+  pilot: {fileID: 0}
+  activeThrustMode: 0
+  movement: {x: 0, y: 0, z: 0}
+  thrust: 0
+  maxThrust: 400
+  minThrust: -100
+  vThrust: 0
+  maxV: 100
+  minV: -100
+  sThrust: 0
+  maxS: 100
+  minS: -100
+  bank: 0
+  currentSpeed: 0
 --- !u!54 &364590855
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7111,7 +7131,8 @@ MonoBehaviour:
   defaultCameraPivotPosition: {x: 0, y: 0, z: 0}
   defaultCameraPosition: {x: 0, y: 4, z: -20}
   defaultCameraRotation: {x: 5, y: 0, z: 0}
-  cameraLag: 0.95
+  yawLag: 1.5
+  pitchLag: 1.5
 --- !u!4 &1917725277 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: e975a8890e0a14e799095ae4df167140, type: 3}
@@ -7131,9 +7152,13 @@ MonoBehaviour:
   modeLabel: {fileID: 815339482}
   thrustLabel: {fileID: 602695715}
   speedLabel: {fileID: 97513406}
+  pilotCamController: {fileID: 0}
   pilotPosition: {fileID: 813530657}
   pilotExitPosition: {fileID: 1767486210}
   isWalkable: 0
+  rotationY: 0
+  rotationX: 0
+  rotationZ: 0
   sensitivityX: 60
   sensitivityY: 60
   sensitivityZ: 0.5
@@ -7142,6 +7167,22 @@ MonoBehaviour:
   brakeModifier: 20
   cruiseSpeed: 60
   attackSpeed: 80
+  hull: {fileID: 0}
+  rb: {fileID: 0}
+  pilot: {fileID: 0}
+  activeThrustMode: 0
+  movement: {x: 0, y: 0, z: 0}
+  thrust: 0
+  maxThrust: 400
+  minThrust: -100
+  vThrust: 0
+  maxV: 100
+  minV: -100
+  sThrust: 0
+  maxS: 100
+  minS: -100
+  bank: 0
+  currentSpeed: 0
 --- !u!1 &1919423951
 GameObject:
   m_ObjectHideFlags: 0
