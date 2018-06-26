@@ -7,10 +7,9 @@ using UnityStandardAssets.Characters.ThirdPerson;
 public class PlayerShipInteractions : MonoBehaviour
 {
 
-    public Vector3 defaultCameraRigPosition;
     public Vector3 defaultCameraPosition;
-    private GameObject cameraRig;
 
+    private GameObject cam;
     private CharacterMovement characterMovement;
     private CharacterController characterController;
     private PilotController pilotController;
@@ -26,7 +25,7 @@ public class PlayerShipInteractions : MonoBehaviour
     {
         characterMovement = gameObject.GetComponent<CharacterMovement>();
         characterController = gameObject.GetComponent<CharacterController>();
-        cameraRig = gameObject.transform.Find("MultipurposeCameraRig").gameObject;
+        cam = gameObject.transform.Find("MainCamera").gameObject;
     }
 
     // Update is called once per frame
@@ -130,15 +129,11 @@ public class PlayerShipInteractions : MonoBehaviour
 
     void SetThirdPersonCamera()
     {
-        Debug.Log("Camera Rig: " + cameraRig);
+        Debug.Log("Camera Rig: " + cam);
 
-        cameraRig.transform.SetParent(gameObject.transform);
-        cameraRig.transform.localScale = new Vector3(1, 1, 1);
-        cameraRig.transform.localPosition = defaultCameraRigPosition;
-        GameObject pivot = cameraRig.transform.Find("Pivot").gameObject;
-        pivot.transform.localPosition = new Vector3(0, 0, 0);
-        GameObject camera = pivot.transform.Find("MainCamera").gameObject;
-        camera.transform.localPosition = new Vector3(0, 0, 0);
-        camera.transform.localEulerAngles = new Vector3(5, 0, 0);
+        cam.transform.SetParent(gameObject.transform);
+        cam.transform.localScale = new Vector3(1, 1, 1);
+        cam.transform.localPosition = defaultCameraPosition;
+        cam.transform.localEulerAngles = Vector3.zero;
     }
 }

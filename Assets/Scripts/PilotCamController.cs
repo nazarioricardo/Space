@@ -4,12 +4,10 @@ using UnityEngine;
 
 public class PilotCamController : MonoBehaviour
 {
-
-    public Vector3 defaultCameraRigPosition;
-    public Vector3 defaultCameraPivotPosition;
     public Vector3 defaultCameraPosition;
     public Vector3 defaultCameraRotation;
 
+    public float maxCamDislocation = 3.5f;
     public float yawLag = 1.5f;
     public float pitchLag = 1.5f;
 
@@ -18,8 +16,6 @@ public class PilotCamController : MonoBehaviour
     private Camera cam;
 
     private GameObject shipHull;
-
-    private float maxCamDislocation = 3.5f;
 
     // Use this for initialization
     void Start()
@@ -63,14 +59,18 @@ public class PilotCamController : MonoBehaviour
         cam.transform.localPosition = Vector3.Lerp(currentPosition, targetPosition, Time.deltaTime);
     }
 
-    public void SetCameraRig(GameObject rigObject)
+    public void SetCamera(GameObject camObject)
     {
-        Debug.Log("Setting rig: " + rigObject);
+        Debug.Log("Setting rig");
 
-        rig = rigObject;
-        pivot = rig.transform.Find("Pivot").gameObject;
-        cam = pivot.transform.Find("MainCamera").gameObject.GetComponent<Camera>();
-        SetCameraPosition();
+        rig = camObject;
+        rig.transform.SetParent(gameObject.transform);
+        rig.transform.localPosition = Vector3.zero;
+        rig.transform.localScale = new Vector3(1, 1, 1);
+
+        cam = rig.gameObject.GetComponent<Camera>();
+        cam.transform.localPosition = defaultCameraPosition;
+        cam.transform.localEulerAngles = defaultCameraRotation;
     }
 
     public void RemoveCameraRig()
@@ -82,11 +82,11 @@ public class PilotCamController : MonoBehaviour
 
     void SetCameraPosition()
     {
+        Debug.Log("Setting Cam");
+
         rig.transform.SetParent(gameObject.transform);
         rig.transform.localScale = new Vector3(1, 1, 1);
-        rig.transform.localPosition = defaultCameraRigPosition;
-        pivot.transform.localPosition = defaultCameraPivotPosition;
-        cam.transform.localPosition = defaultCameraPosition;
-        cam.transform.localEulerAngles = defaultCameraRotation;
+        rig.transform.localPosition = defaultCameraPosition;
+        rig.transform.localEulerAngles = defaultCameraRotation;
     }
 }

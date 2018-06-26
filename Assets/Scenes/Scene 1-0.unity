@@ -1402,37 +1402,19 @@ MonoBehaviour:
   modeLabel: {fileID: 815339482}
   thrustLabel: {fileID: 602695715}
   speedLabel: {fileID: 97513406}
-  pilotCamController: {fileID: 0}
   pilotPosition: {fileID: 478639622}
   pilotExitPosition: {fileID: 981633958}
-  isWalkable: 1
-  rotationY: 0
-  rotationX: 0
-  rotationZ: 0
-  sensitivityX: 0.1
-  sensitivityY: 0.1
-  sensitivityZ: 1
+  yawSenstivity: 60
+  pitchSensitivity: 60
   rollSpeed: 90
   acceleration: 50
-  brakeModifier: 20
-  cruiseSpeed: 60
-  attackSpeed: 80
-  hull: {fileID: 0}
-  rb: {fileID: 0}
-  pilot: {fileID: 0}
-  activeThrustMode: 0
-  movement: {x: 0, y: 0, z: 0}
-  thrust: 0
   maxThrust: 400
   minThrust: -100
-  vThrust: 0
-  maxV: 100
-  minV: -100
-  sThrust: 0
-  maxS: 100
-  minS: -100
-  bank: 0
-  currentSpeed: 0
+  maxVerticalThrust: 100
+  minVerticalThrust: -100
+  maxHorizontalThrust: 100
+  minHorizontalThrust: -100
+  maxBank: 70
 --- !u!54 &364590855
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2327,7 +2309,7 @@ Transform:
   m_LocalScale: {x: 2, y: 1.1764705, z: 2}
   m_Children: []
   m_Father: {fileID: 1053982149}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!81 &522937094
 AudioListener:
@@ -2970,8 +2952,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 982492165}
+  m_Children: []
   m_Father: {fileID: 1554660340}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4144,13 +4125,13 @@ Transform:
   m_PrefabParentObject: {fileID: 400002, guid: baec086904791744185aaa07a6cf55c2, type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 982492164}
-  m_LocalRotation: {x: 0.043619405, y: 0, z: 0, w: 0.9990483}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1, y: 1, z: -6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 713612522}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 5, y: 0, z: 0}
+  m_Father: {fileID: 1053982149}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &982492166
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4518,6 +4499,7 @@ Transform:
   m_LocalScale: {x: 0.5, y: 0.85, z: 0.5}
   m_Children:
   - {fileID: 666833344}
+  - {fileID: 982492165}
   - {fileID: 1554660340}
   - {fileID: 522937093}
   m_Father: {fileID: 0}
@@ -4615,8 +4597,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa6835e76799943a48c6a8cde35df816, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultCameraRigPosition: {x: 1, y: 1, z: -5}
-  defaultCameraPosition: {x: 0, y: 0, z: 0}
+  defaultCameraPosition: {x: 1, y: 1, z: -6}
 --- !u!1 &1055898199
 GameObject:
   m_ObjectHideFlags: 0
@@ -5827,7 +5808,7 @@ Transform:
   m_Children:
   - {fileID: 713612522}
   m_Father: {fileID: 1053982149}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &1554660343
 Rigidbody:
@@ -7131,6 +7112,7 @@ MonoBehaviour:
   defaultCameraPivotPosition: {x: 0, y: 0, z: 0}
   defaultCameraPosition: {x: 0, y: 4, z: -20}
   defaultCameraRotation: {x: 5, y: 0, z: 0}
+  maxCamDislocation: 3.5
   yawLag: 1.5
   pitchLag: 1.5
 --- !u!4 &1917725277 stripped
@@ -7152,37 +7134,19 @@ MonoBehaviour:
   modeLabel: {fileID: 815339482}
   thrustLabel: {fileID: 602695715}
   speedLabel: {fileID: 97513406}
-  pilotCamController: {fileID: 0}
   pilotPosition: {fileID: 813530657}
   pilotExitPosition: {fileID: 1767486210}
-  isWalkable: 0
-  rotationY: 0
-  rotationX: 0
-  rotationZ: 0
-  sensitivityX: 60
-  sensitivityY: 60
-  sensitivityZ: 0.5
+  yawSenstivity: 60
+  pitchSensitivity: 60
   rollSpeed: 90
   acceleration: 50
-  brakeModifier: 20
-  cruiseSpeed: 60
-  attackSpeed: 80
-  hull: {fileID: 0}
-  rb: {fileID: 0}
-  pilot: {fileID: 0}
-  activeThrustMode: 0
-  movement: {x: 0, y: 0, z: 0}
-  thrust: 0
   maxThrust: 400
   minThrust: -100
-  vThrust: 0
-  maxV: 100
-  minV: -100
-  sThrust: 0
-  maxS: 100
-  minS: -100
-  bank: 0
-  currentSpeed: 0
+  maxVerticalThrust: 100
+  minVerticalThrust: -100
+  maxHorizontalThrust: 100
+  minHorizontalThrust: -100
+  maxBank: 70
 --- !u!1 &1919423951
 GameObject:
   m_ObjectHideFlags: 0

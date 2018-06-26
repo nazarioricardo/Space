@@ -343,7 +343,7 @@ public class PilotController : MonoBehaviour
 
         pilotCamController = GetComponent<PilotCamController>();
         pilotCamController.enabled = true;
-        pilotCamController.SetCameraRig(pilot.transform.Find("MultipurposeCameraRig").gameObject);
+        pilotCamController.SetCamera(pilot.transform.Find("MainCamera").gameObject);
     }
 
     public void RemovePilot()
