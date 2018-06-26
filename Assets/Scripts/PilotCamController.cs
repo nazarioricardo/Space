@@ -12,7 +12,6 @@ public class PilotCamController : MonoBehaviour
     public float pitchLag = 1.5f;
 
     private GameObject rig;
-    private GameObject pivot;
     private Camera cam;
 
     private GameObject shipHull;
@@ -76,7 +75,6 @@ public class PilotCamController : MonoBehaviour
     public void RemoveCameraRig()
     {
         rig = null;
-        pivot = null;
         cam = null;
     }
 
