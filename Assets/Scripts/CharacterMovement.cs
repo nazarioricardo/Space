@@ -13,21 +13,24 @@ public class CharacterMovement : MonoBehaviour
 
     public Vector3 drag;
     public GameObject playerCameraRig;
-    public LayerMask ground;
-    public Transform groundChecker;
     public float mouseSensitivity = 100.0f;
     private float modAngle = 360.0f;
 
+    private float horizontalMovement;
+    private float verticalMovement;
     private float rotationY = 0.0f; // rotation around the up/y axis
     private float rotationX = 0.0f; // rotation around the right/x axis
     private CharacterController controller;
     private Vector3 velocity;
     private float gravity = -9.81f;
 
+    private Animator animator;
+
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
-        groundChecker = transform.GetChild(0);
+        animator = GetComponentInChildren<Animator>();
         InitializeRotation();
     }
 
@@ -54,12 +57,14 @@ public class CharacterMovement : MonoBehaviour
 
     void MovePlayer()
     {
-
-        Vector3 move = new Vector3(InputManager.LeftHorizontalAxis(), 0, InputManager.LeftVerticalAxis());
+        horizontalMovement = InputManager.LeftHorizontalAxis();
+        verticalMovement = InputManager.LeftVerticalAxis();
+        Vector3 move = new Vector3(horizontalMovement, 0, verticalMovement);
         controller.Move(controller.transform.TransformDirection(move * Time.deltaTime * speed));
-
-
         controller.Move(controller.transform.TransformVector(velocity));
+
+        animator.SetFloat("Horizontal", horizontalMovement);
+        animator.SetFloat("Vertical", verticalMovement);
     }
 
     void Jump()
