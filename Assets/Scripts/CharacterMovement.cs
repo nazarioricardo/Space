@@ -38,11 +38,8 @@ public class CharacterMovement : MonoBehaviour
     {
         MovePlayer();
         MouseLook();
-    }
-
-    void FixedUpdate()
-    {
         Jump();
+
     }
 
     // Custom Methods
@@ -60,7 +57,7 @@ public class CharacterMovement : MonoBehaviour
         horizontalMovement = InputManager.LeftHorizontalAxis();
         verticalMovement = InputManager.LeftVerticalAxis();
         Vector3 move = new Vector3(horizontalMovement, 0, verticalMovement);
-        controller.Move(controller.transform.TransformDirection(move * Time.deltaTime * speed));
+        controller.Move(controller.transform.TransformDirection(move * 0.3f));
         controller.Move(controller.transform.TransformVector(velocity));
 
         animator.SetFloat("Horizontal", horizontalMovement);
