@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShipPlayerInteractions : MonoBehaviour {
+public class Gun : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

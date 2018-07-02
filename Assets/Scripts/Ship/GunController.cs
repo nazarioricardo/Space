@@ -2,12 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CombatController : MonoBehaviour {
+public class GunController : MonoBehaviour {
+
+    [HideInInspector]
+    public Transform muzzle;
+
+    public float fireRate;
+
+    private float coolDown;
+    private bool canFire;
 
     // Use this for initialization
     void Start()
     {
-
+        muzzle = transform.Find("Muzzle");
     }
 
     // Update is called once per frame

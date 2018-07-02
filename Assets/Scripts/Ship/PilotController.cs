@@ -20,7 +20,7 @@ public class PilotController : MonoBehaviour
     private PilotCamController pilotCamController;
 
     // Combat
-    private CombatController combatController;
+    private GunController gunController;
 
     // Player Interactions
     public Component pilotPosition;
@@ -76,7 +76,7 @@ public class PilotController : MonoBehaviour
         hull = transform.Find("Hull").gameObject;
         rb = hull.GetComponent<Rigidbody>();
         pilotCamController = GetComponent<PilotCamController>();
-        combatController = GetComponent<CombatController>();
+        gunController = GetComponent<GunController>();
         activeThrustMode = ThrustMode.Off;
         modeLabel.text = "Off";
     }
@@ -357,8 +357,8 @@ public class PilotController : MonoBehaviour
         pilotCamController.enabled = true;
         pilotCamController.SetCamera(pilot.transform.Find("MainCamera").gameObject);
 
-        combatController = GetComponent<CombatController>();
-        combatController.enabled = true;
+        gunController = GetComponent<GunController>();
+        gunController.enabled = true;
     }
 
     public void RemovePilot()
@@ -369,6 +369,6 @@ public class PilotController : MonoBehaviour
         pilotCamController.RemoveCameraRig();
         pilotCamController.enabled = false;
 
-        combatController.enabled = false;
+        gunController.enabled = false;
     }
 }
