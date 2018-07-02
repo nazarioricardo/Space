@@ -112,4 +112,9 @@ public static class InputManager
     {
         return player.GetButtonUp("Right Trigger");
     }
+
+    public static bool PrimaryFireButtonDown()
+    {
+        return player.GetButtonDown("Right Bumper");
+    }
 }

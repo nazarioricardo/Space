@@ -19,25 +19,30 @@ public class PilotController : MonoBehaviour
     // Camera
     private PilotCamController pilotCamController;
 
+    // Combat
+    private CombatController combatController;
+
     // Player Interactions
     public Component pilotPosition;
     public Component pilotExitPosition;
+    public bool isWalkable;
+
+    // Axes
+    private float rotationY = 0.0f; // rotation around the up/y axis
+    private float rotationX = 0.0f; // rotation around the right/x axis
+    private float rotationZ = 0.0f;
 
     // Movement Modifiers
-    public float yawSenstivity = 60.0f;
-    public float pitchSensitivity = 60.0f;
+    public float sensitivityX = 60.0f;
+    public float sensitivityY = 60.0f;
+    public float sensitivityZ = 0.5f;
     public float rollSpeed = 90;
     public float acceleration = 50f;
+    public float brakeModifier = 20f;
 
-    public float maxThrust = 400.0f;
-    public float minThrust = -100.0f;
-    public float maxVerticalThrust = 100.0f;
-    public float minVerticalThrust = -100.0f;
-    public float maxHorizontalThrust = 100.0f;
-    public float minHorizontalThrust = -100.0f;
-    public int maxBank = 70;
+    public float cruiseSpeed = 60f;
+    public float attackSpeed = 80f;
 
-    // Ship Parts
     private GameObject hull;
     private Rigidbody rb;
 
@@ -47,17 +52,23 @@ public class PilotController : MonoBehaviour
     // Ship Movement
     private enum ThrustMode { Off, Free, Hover, Cruise, Reverse }
     private ThrustMode activeThrustMode;
+    private Vector3 movement;
 
     private float thrust = 0.0f;
-    private float verticalThrust = 0.0f;
-    private float horizontalThrust = 0.0f;
-    private float bank = 0.0f;
-    private float currentSpeed = 0.0f;
+    private float maxThrust = 400.0f;
+    private float minThrust = -100.0f;
 
-    // Axes
-    private float rotationY = 0.0f; // rotation around the up/y axis
-    private float rotationX = 0.0f; // rotation around the right/x axis
-    private float rotationZ = 0.0f;
+    private float vThrust = 0.0f;
+    private float maxV = 100.0f;
+    private float minV = -100.0f;
+
+    private float sThrust = 0.0f;
+    private float maxS = 100.0f;
+    private float minS = -100.0f;
+
+    private float bank = 0.0f;
+
+    private float currentSpeed = 0.0f;
 
     void Start()
     {
@@ -65,6 +76,7 @@ public class PilotController : MonoBehaviour
         hull = transform.Find("Hull").gameObject;
         rb = hull.GetComponent<Rigidbody>();
         pilotCamController = GetComponent<PilotCamController>();
+        combatController = GetComponent<CombatController>();
         activeThrustMode = ThrustMode.Off;
         modeLabel.text = "Off";
     }
@@ -145,7 +157,7 @@ public class PilotController : MonoBehaviour
     {
         activeThrustMode = ThrustMode.Free;
         modeLabel.text = "Free";
-        horizontalThrust = 0.0f;
+        sThrust = 0.0f;
     }
 
     void SetHover()
@@ -158,14 +170,14 @@ public class PilotController : MonoBehaviour
     {
         activeThrustMode = ThrustMode.Cruise;
         modeLabel.text = "Cruise";
-        horizontalThrust = 0.0f;
+        sThrust = 0.0f;
     }
 
     void SetReverse()
     {
         activeThrustMode = ThrustMode.Reverse;
         modeLabel.text = "Reverse";
-        horizontalThrust = 0.0f;
+        sThrust = 0.0f;
     }
 
     void Throttle()
@@ -191,19 +203,19 @@ public class PilotController : MonoBehaviour
         float target = 0.0f;
 
         if (yAxis > 0)
-            target = Mathf.Clamp(verticalThrust + acceleration * Time.deltaTime, minVerticalThrust, maxVerticalThrust);
+            target = Mathf.Clamp(vThrust + acceleration * Time.deltaTime, minV, maxV);
 
         if (yAxis < 0)
-            target = Mathf.Clamp(verticalThrust - acceleration * Time.deltaTime, minVerticalThrust, maxVerticalThrust);
+            target = Mathf.Clamp(vThrust - acceleration * Time.deltaTime, minV, maxV);
 
-        if (yAxis == 0.0f && verticalThrust > 0)
-            target = Mathf.Clamp(verticalThrust - acceleration * Time.deltaTime, 0, maxVerticalThrust);
+        if (yAxis == 0.0f && vThrust > 0)
+            target = Mathf.Clamp(vThrust - acceleration * Time.deltaTime, 0, maxV);
 
-        if (yAxis == 0.0f && verticalThrust < 0)
-            target = Mathf.Clamp(verticalThrust + acceleration * Time.deltaTime, minVerticalThrust, 0);
+        if (yAxis == 0.0f && vThrust < 0)
+            target = Mathf.Clamp(vThrust + acceleration * Time.deltaTime, minV, 0);
 
-        verticalThrust = Mathf.Lerp(verticalThrust, target, 5 * Time.deltaTime);
-        transform.position += transform.up * verticalThrust * Time.deltaTime;
+        vThrust = Mathf.Lerp(vThrust, target, 5 * Time.deltaTime);
+        transform.position += transform.up * vThrust * Time.deltaTime;
         pilotCamController.Elevate(-yAxis);
     }
 
@@ -219,7 +231,7 @@ public class PilotController : MonoBehaviour
     void Pitch()
     {
         float yAxis = -InputManager.RightVerticalAxis();
-        float target = yAxis * pitchSensitivity * Time.deltaTime;
+        float target = yAxis * sensitivityY * Time.deltaTime;
         rotationY = Mathf.Lerp(rotationY, target, 5 * Time.deltaTime);
         Vector3 localRotation = new Vector3(rotationY, 0.0f, 0.0f);
         transform.Rotate(localRotation);
@@ -229,7 +241,7 @@ public class PilotController : MonoBehaviour
     void Yaw()
     {
         float xAxis = InputManager.RightHorizontalAxis();
-        float target = xAxis * yawSenstivity * Time.deltaTime;
+        float target = xAxis * sensitivityX * Time.deltaTime;
         rotationX = Mathf.Lerp(rotationX, target, 5 * Time.deltaTime);
         Vector3 localRotation = new Vector3(0.0f, rotationX, 0.0f);
         transform.Rotate(localRotation);
@@ -290,20 +302,20 @@ public class PilotController : MonoBehaviour
         float xAxis = InputManager.LeftHorizontalAxis();
         float target = 0.0f;
         if (xAxis > 0)
-            target = Mathf.Clamp(horizontalThrust + acceleration * Time.deltaTime, minHorizontalThrust, maxHorizontalThrust);
+            target = Mathf.Clamp(sThrust + acceleration * Time.deltaTime, minS, maxS);
 
         if (xAxis < 0)
-            target = Mathf.Clamp(horizontalThrust - acceleration * Time.deltaTime, minHorizontalThrust, maxHorizontalThrust);
+            target = Mathf.Clamp(sThrust - acceleration * Time.deltaTime, minS, maxS);
 
-        if (xAxis == 0.0f && horizontalThrust > 0)
-            target = Mathf.Clamp(horizontalThrust - acceleration * Time.deltaTime, 0, maxHorizontalThrust);
+        if (xAxis == 0.0f && sThrust > 0)
+            target = Mathf.Clamp(sThrust - acceleration * Time.deltaTime, 0, maxS);
 
-        if (xAxis == 0.0f && horizontalThrust < 0)
-            target = Mathf.Clamp(horizontalThrust + acceleration * Time.deltaTime, minHorizontalThrust, 0);
+        if (xAxis == 0.0f && sThrust < 0)
+            target = Mathf.Clamp(sThrust + acceleration * Time.deltaTime, minS, 0);
 
         Bank(xAxis);
-        horizontalThrust = Mathf.Lerp(horizontalThrust, target, 5 * Time.deltaTime);
-        transform.position += transform.right * horizontalThrust * Time.deltaTime;
+        sThrust = Mathf.Lerp(sThrust, target, 5 * Time.deltaTime);
+        transform.position += transform.right * sThrust * Time.deltaTime;
         pilotCamController.Strafe(-xAxis);
     }
 
@@ -319,7 +331,7 @@ public class PilotController : MonoBehaviour
          * negative bank
          */
 
-        bank = Mathf.Lerp(bank, -xMovement * maxBank * Time.deltaTime * thrust / 10, Time.deltaTime * 2);
+        bank = Mathf.Lerp(bank, -xMovement * 70 * Time.deltaTime * thrust / 10, Time.deltaTime * 2);
         Vector3 rotation = new Vector3(0.0f, 0.0f, bank);
         hull.transform.localEulerAngles = rotation;
     }
@@ -344,6 +356,9 @@ public class PilotController : MonoBehaviour
         pilotCamController = GetComponent<PilotCamController>();
         pilotCamController.enabled = true;
         pilotCamController.SetCamera(pilot.transform.Find("MainCamera").gameObject);
+
+        combatController = GetComponent<CombatController>();
+        combatController.enabled = true;
     }
 
     public void RemovePilot()
@@ -353,5 +368,7 @@ public class PilotController : MonoBehaviour
         pilot = null;
         pilotCamController.RemoveCameraRig();
         pilotCamController.enabled = false;
+
+        combatController.enabled = false;
     }
 }
