@@ -20,7 +20,7 @@ public class PilotController : MonoBehaviour
     private PilotCamController pilotCamController;
 
     // Combat
-    private GunController gunController;
+    private WeaponsController weaponsController;
 
     // Player Interactions
     public Component pilotPosition;
@@ -75,8 +75,8 @@ public class PilotController : MonoBehaviour
         Debug.Log("Starting pilot controller");
         hull = transform.Find("Hull").gameObject;
         rb = hull.GetComponent<Rigidbody>();
-        pilotCamController = GetComponent<PilotCamController>();
-        gunController = GetComponent<GunController>();
+        //pilotCamController = GetComponent<PilotCamController>();
+        //weaponsController = GetComponent<WeaponsController>();
         activeThrustMode = ThrustMode.Off;
         modeLabel.text = "Off";
     }
@@ -101,7 +101,7 @@ public class PilotController : MonoBehaviour
         currentSpeed = rb.velocity.magnitude;
 
         if (rb.angularVelocity != Vector3.zero || rb.velocity != Vector3.zero)
-            transform.position = hull.transform.position;
+            //transform.position = hull.transform.position;
 
         speedLabel.text = currentSpeed.ToString();
         thrustLabel.text = thrust.ToString();
@@ -357,8 +357,8 @@ public class PilotController : MonoBehaviour
         pilotCamController.enabled = true;
         pilotCamController.SetCamera(pilot.transform.Find("MainCamera").gameObject);
 
-        gunController = GetComponent<GunController>();
-        gunController.enabled = true;
+        weaponsController = GetComponent<WeaponsController>();
+        weaponsController.enabled = true;
     }
 
     public void RemovePilot()
@@ -369,6 +369,6 @@ public class PilotController : MonoBehaviour
         pilotCamController.RemoveCameraRig();
         pilotCamController.enabled = false;
 
-        gunController.enabled = false;
+        weaponsController.enabled = false;
     }
 }

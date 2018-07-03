@@ -8,6 +8,7 @@ TagManager:
   - CockpitTrigger
   - EntryTrigger
   - Ship
+  - PlayerHull
   layers:
   - Default
   - TransparentFX
@@ -17,9 +18,9 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
+  - Player
+  - Enemies
+  - Projectiles
   - 
   - 
   - 
