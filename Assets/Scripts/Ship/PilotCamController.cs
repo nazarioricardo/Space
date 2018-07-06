@@ -16,10 +16,29 @@ public class PilotCamController : MonoBehaviour
 
     private GameObject shipHull;
 
-    // Use this for initialization
-    void Start()
+    private void Awake()
     {
         shipHull = transform.Find("Hull").gameObject;
+    }
+
+    public void OnDestabilize(bool isStabilizing) 
+    {
+        if (isStabilizing)
+            return;
+
+        Debug.Log("On Destabilized Cam called");
+        Vector3 direction = (shipHull.transform.localPosition - cam.transform.localPosition).normalized;
+        Quaternion targetRotation = Quaternion.LookRotation(direction) * Quaternion.Euler(defaultCameraRotation);
+        Vector3 targetPosition = shipHull.transform.localPosition + defaultCameraPosition;
+
+        cam.transform.localRotation = Quaternion.Lerp(cam.transform.localRotation, targetRotation, 2f * Time.deltaTime);
+        cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition, targetPosition, 2f * Time.deltaTime);
+    }
+
+    public void OnStabilize()
+    {
+        cam.transform.localRotation = Quaternion.Lerp(cam.transform.localRotation, Quaternion.Euler(defaultCameraRotation), 2f * Time.deltaTime);
+        cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition, defaultCameraPosition, 2f * Time.deltaTime);
     }
 
     public void Pitch(float shipPitch, float currentThrustPercentage)
@@ -27,7 +46,6 @@ public class PilotCamController : MonoBehaviour
         Vector3 currentPosition = cam.transform.localPosition;
         float targetY = shipPitch * (currentThrustPercentage * maxCamDislocation + 1) + defaultCameraPosition.y;
         Vector3 targetPosition = new Vector3(currentPosition.x, targetY, currentPosition.z);
-
         cam.transform.localPosition = Vector3.Lerp(currentPosition, targetPosition, yawLag * Time.deltaTime);
     }
 
@@ -54,7 +72,6 @@ public class PilotCamController : MonoBehaviour
         Vector3 currentPosition = cam.transform.localPosition;
         float targetY = shipElevate + defaultCameraPosition.y;
         Vector3 targetPosition = new Vector3(currentPosition.x, targetY, currentPosition.z);
-
         cam.transform.localPosition = Vector3.Lerp(currentPosition, targetPosition, Time.deltaTime);
     }
 

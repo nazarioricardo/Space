@@ -67,16 +67,20 @@ public class PilotController : MonoBehaviour
     private float minS = -100.0f;
 
     private float bank = 0.0f;
-
     private float currentSpeed = 0.0f;
 
-    void Start()
+    private bool needStabilizing = false;
+    private bool isStabilizing = false;
+
+    private void Awake()
+    {
+        hull = transform.Find("Hull").gameObject;
+        rb = hull.GetComponent<Rigidbody>();  
+    }
+
+    private void Start()
     {
         Debug.Log("Starting pilot controller");
-        hull = transform.Find("Hull").gameObject;
-        rb = hull.GetComponent<Rigidbody>();
-        //pilotCamController = GetComponent<PilotCamController>();
-        //weaponsController = GetComponent<WeaponsController>();
         activeThrustMode = ThrustMode.Off;
         modeLabel.text = "Off";
     }
@@ -99,12 +103,15 @@ public class PilotController : MonoBehaviour
         Elevate();
 
         currentSpeed = rb.velocity.magnitude;
-
-        if (rb.angularVelocity != Vector3.zero || rb.velocity != Vector3.zero)
-            //transform.position = hull.transform.position;
-
         speedLabel.text = currentSpeed.ToString();
         thrustLabel.text = thrust.ToString();
+
+        if (rb.angularVelocity != Vector3.zero || rb.velocity != Vector3.zero)
+        {
+            Debug.Log("Need stabilizing");
+            needStabilizing = true;
+            pilotCamController.OnDestabilize(isStabilizing);
+        }
     }
 
     void ManageThrustMode()
@@ -281,7 +288,7 @@ public class PilotController : MonoBehaviour
         if (activeThrustMode != ThrustMode.Hover)
             return;
 
-        StabilizeFromTumble();
+        Stabilize();
 
         Strafe();
 
@@ -319,6 +326,33 @@ public class PilotController : MonoBehaviour
         pilotCamController.Strafe(-xAxis);
     }
 
+    void Stabilize()
+    {
+        isStabilizing = true;
+        pilotCamController.OnStabilize();
+
+        rb.angularVelocity = Vector3.Lerp(rb.angularVelocity, Vector3.zero, 2f * Time.deltaTime);
+        rb.velocity = Vector3.Lerp(rb.velocity, Vector3.zero, 2f * Time.deltaTime);
+        transform.position = Vector3.Lerp(transform.position, hull.transform.position, 2f * Time.deltaTime);
+        hull.transform.localPosition = Vector3.Lerp(hull.transform.localPosition, Vector3.zero, 2f * Time.deltaTime);
+
+        if (hull.transform.localPosition.magnitude < 0.05f)
+            hull.transform.localPosition = Vector3.zero;
+
+        if (rb.angularVelocity.magnitude < 0.5f)
+            rb.angularVelocity = Vector3.zero;
+
+        if (rb.velocity.magnitude < 0.05f)
+            rb.velocity = Vector3.zero;
+
+        if (rb.angularVelocity == Vector3.zero && rb.velocity == Vector3.zero && hull.transform.localPosition == Vector3.zero)
+        {
+            Debug.Log("Done Stabilizing");
+            needStabilizing = false;
+            isStabilizing = false;   
+        }
+    }
+
     void Bank(float xMovement)
     {
         /*
@@ -334,13 +368,6 @@ public class PilotController : MonoBehaviour
         bank = Mathf.Lerp(bank, -xMovement * 70 * Time.deltaTime * thrust / 10, Time.deltaTime * 2);
         Vector3 rotation = new Vector3(0.0f, 0.0f, bank);
         hull.transform.localEulerAngles = rotation;
-    }
-
-    void StabilizeFromTumble()
-    {
-        rb.angularVelocity = Vector3.Lerp(rb.angularVelocity, Vector3.zero, 2F * Time.deltaTime);
-        rb.velocity = Vector3.Lerp(rb.velocity, Vector3.zero, 2F * Time.deltaTime);
-        hull.transform.localPosition = Vector3.Lerp(hull.transform.localPosition, Vector3.zero, 2f * Time.deltaTime);
     }
 
     public void SetPilot(GameObject player)
@@ -368,7 +395,6 @@ public class PilotController : MonoBehaviour
         pilot = null;
         pilotCamController.RemoveCameraRig();
         pilotCamController.enabled = false;
-
         weaponsController.enabled = false;
     }
 }
