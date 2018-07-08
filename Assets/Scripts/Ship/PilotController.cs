@@ -80,7 +80,6 @@ public class PilotController : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("Starting pilot controller");
         activeThrustMode = ThrustMode.Off;
         modeLabel.text = "Off";
     }
@@ -108,7 +107,6 @@ public class PilotController : MonoBehaviour
 
         if (rb.angularVelocity != Vector3.zero || rb.velocity != Vector3.zero)
         {
-            Debug.Log("Need stabilizing");
             needStabilizing = true;
             pilotCamController.OnDestabilize(isStabilizing);
         }
@@ -202,6 +200,8 @@ public class PilotController : MonoBehaviour
 
         thrust = Mathf.Lerp(thrust, target, 0.5f);
         transform.position += transform.forward * thrust * Time.deltaTime;
+        //rb.velocity = transform.forward * thrust * 100 * Time.deltaTime;
+        //rb.MovePosition(transform.forward * thrust * Time.deltaTime);
     }
 
     void Elevate()
@@ -223,6 +223,8 @@ public class PilotController : MonoBehaviour
 
         vThrust = Mathf.Lerp(vThrust, target, 5 * Time.deltaTime);
         transform.position += transform.up * vThrust * Time.deltaTime;
+        //rb.velocity = transform.up * vThrust * 50 * Time.deltaTime;
+
         pilotCamController.Elevate(-yAxis);
     }
 
@@ -323,6 +325,8 @@ public class PilotController : MonoBehaviour
         Bank(xAxis);
         sThrust = Mathf.Lerp(sThrust, target, 5 * Time.deltaTime);
         transform.position += transform.right * sThrust * Time.deltaTime;
+        //rb.velocity = transform.right * sThrust * 50 * Time.deltaTime;
+
         pilotCamController.Strafe(-xAxis);
     }
 
@@ -347,7 +351,6 @@ public class PilotController : MonoBehaviour
 
         if (rb.angularVelocity == Vector3.zero && rb.velocity == Vector3.zero && hull.transform.localPosition == Vector3.zero)
         {
-            Debug.Log("Done Stabilizing");
             needStabilizing = false;
             isStabilizing = false;   
         }

@@ -28,6 +28,11 @@ public class HullController : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Collision! " + collision.relativeVelocity);
+        Debug.Log("Collision: " + collision.ToString());
+        Debug.Log("Collision Velocity " + collision.relativeVelocity);
+        Debug.Log("Collision Contact Points " + collision.contacts.ToString());
+        Debug.Log("Collision Impulse " + collision.impulse);
+
+        //rb.AddExplosionForce(collision.relativeVelocity.magnitude, collision.contacts[0].point, collision.impulse.magnitude);
     }
 }

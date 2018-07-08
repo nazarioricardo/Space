@@ -26,7 +26,6 @@ public class PilotCamController : MonoBehaviour
         if (isStabilizing)
             return;
 
-        Debug.Log("On Destabilized Cam called");
         Vector3 direction = (shipHull.transform.localPosition - cam.transform.localPosition).normalized;
         Quaternion targetRotation = Quaternion.LookRotation(direction) * Quaternion.Euler(defaultCameraRotation);
         Vector3 targetPosition = shipHull.transform.localPosition + defaultCameraPosition;
@@ -77,8 +76,6 @@ public class PilotCamController : MonoBehaviour
 
     public void SetCamera(GameObject camObject)
     {
-        Debug.Log("Setting rig");
-
         rig = camObject;
         rig.transform.SetParent(gameObject.transform);
         rig.transform.localPosition = Vector3.zero;
@@ -97,8 +94,6 @@ public class PilotCamController : MonoBehaviour
 
     void SetCameraPosition()
     {
-        Debug.Log("Setting Cam");
-
         rig.transform.SetParent(gameObject.transform);
         rig.transform.localScale = new Vector3(1, 1, 1);
         rig.transform.localPosition = defaultCameraPosition;
