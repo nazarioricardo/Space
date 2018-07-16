@@ -44,7 +44,7 @@ public class PilotController : MonoBehaviour
     public float attackSpeed = 80f;
 
     private GameObject hull;
-    private Rigidbody rb;
+    private Rigidbody hullRigidbody;
 
     // Player Management Props
     private GameObject pilot;
@@ -75,7 +75,7 @@ public class PilotController : MonoBehaviour
     private void Awake()
     {
         hull = transform.Find("Hull").gameObject;
-        rb = hull.GetComponent<Rigidbody>();  
+        hullRigidbody = hull.GetComponent<Rigidbody>();  
     }
 
     private void Start()
@@ -101,11 +101,11 @@ public class PilotController : MonoBehaviour
         PitchYaw();
         Elevate();
 
-        currentSpeed = rb.velocity.magnitude;
+        currentSpeed = hullRigidbody.velocity.magnitude;
         speedLabel.text = currentSpeed.ToString();
         thrustLabel.text = thrust.ToString();
 
-        if (rb.angularVelocity != Vector3.zero || rb.velocity != Vector3.zero)
+        if (hullRigidbody.angularVelocity != Vector3.zero || hullRigidbody.velocity != Vector3.zero)
         {
             needStabilizing = true;
             pilotCamController.OnDestabilize(isStabilizing);
@@ -200,8 +200,6 @@ public class PilotController : MonoBehaviour
 
         thrust = Mathf.Lerp(thrust, target, 0.5f);
         transform.position += transform.forward * thrust * Time.deltaTime;
-        //rb.velocity = transform.forward * thrust * 100 * Time.deltaTime;
-        //rb.MovePosition(transform.forward * thrust * Time.deltaTime);
     }
 
     void Elevate()
@@ -223,7 +221,6 @@ public class PilotController : MonoBehaviour
 
         vThrust = Mathf.Lerp(vThrust, target, 5 * Time.deltaTime);
         transform.position += transform.up * vThrust * Time.deltaTime;
-        //rb.velocity = transform.up * vThrust * 50 * Time.deltaTime;
 
         pilotCamController.Elevate(-yAxis);
     }
@@ -325,7 +322,6 @@ public class PilotController : MonoBehaviour
         Bank(xAxis);
         sThrust = Mathf.Lerp(sThrust, target, 5 * Time.deltaTime);
         transform.position += transform.right * sThrust * Time.deltaTime;
-        //rb.velocity = transform.right * sThrust * 50 * Time.deltaTime;
 
         pilotCamController.Strafe(-xAxis);
     }
@@ -335,21 +331,21 @@ public class PilotController : MonoBehaviour
         isStabilizing = true;
         pilotCamController.OnStabilize();
 
-        rb.angularVelocity = Vector3.Lerp(rb.angularVelocity, Vector3.zero, 2f * Time.deltaTime);
-        rb.velocity = Vector3.Lerp(rb.velocity, Vector3.zero, 2f * Time.deltaTime);
+        hullRigidbody.angularVelocity = Vector3.Lerp(hullRigidbody.angularVelocity, Vector3.zero, 2f * Time.deltaTime);
+        hullRigidbody.velocity = Vector3.Lerp(hullRigidbody.velocity, Vector3.zero, 2f * Time.deltaTime);
         transform.position = Vector3.Lerp(transform.position, hull.transform.position, 2f * Time.deltaTime);
         hull.transform.localPosition = Vector3.Lerp(hull.transform.localPosition, Vector3.zero, 2f * Time.deltaTime);
 
         if (hull.transform.localPosition.magnitude < 0.05f)
             hull.transform.localPosition = Vector3.zero;
 
-        if (rb.angularVelocity.magnitude < 0.5f)
-            rb.angularVelocity = Vector3.zero;
+        if (hullRigidbody.angularVelocity.magnitude < 0.5f)
+            hullRigidbody.angularVelocity = Vector3.zero;
 
-        if (rb.velocity.magnitude < 0.05f)
-            rb.velocity = Vector3.zero;
+        if (hullRigidbody.velocity.magnitude < 0.05f)
+            hullRigidbody.velocity = Vector3.zero;
 
-        if (rb.angularVelocity == Vector3.zero && rb.velocity == Vector3.zero && hull.transform.localPosition == Vector3.zero)
+        if (hullRigidbody.angularVelocity == Vector3.zero && hullRigidbody.velocity == Vector3.zero && hull.transform.localPosition == Vector3.zero)
         {
             needStabilizing = false;
             isStabilizing = false;   
