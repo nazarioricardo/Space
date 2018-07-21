@@ -3990,7 +3990,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 982492165}
-  - component: {fileID: 982492170}
   - component: {fileID: 982492171}
   - component: {fileID: 982492169}
   - component: {fileID: 982492168}
@@ -4052,18 +4051,6 @@ Behaviour:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 982492164}
   m_Enabled: 1
---- !u!135 &982492170
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 982492164}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!20 &982492171
 Camera:
   m_ObjectHideFlags: 0
