@@ -75,7 +75,7 @@ public class PilotController : MonoBehaviour
     private void Awake()
     {
         hull = transform.Find("Hull").gameObject;
-        hullRigidbody = hull.GetComponent<Rigidbody>();  
+        hullRigidbody = GetComponent<Rigidbody>();  
     }
 
     private void Start()
