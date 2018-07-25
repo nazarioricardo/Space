@@ -34,12 +34,11 @@ public class CharacterMovement : MonoBehaviour
         InitializeRotation();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         MovePlayer();
         MouseLook();
         Jump();
-
     }
 
     // Custom Methods
