@@ -371,7 +371,8 @@ public class PilotController : MonoBehaviour
 
     public void SetPilot(GameObject player)
     {
-        // TODO: Figure out why I need to call this instead of relying on the call on Start()
+        GUIHandler.instance.ToggleGUI();
+
         hull = transform.Find("Hull").gameObject;
 
         pilot = player;
@@ -389,6 +390,8 @@ public class PilotController : MonoBehaviour
 
     public void RemovePilot()
     {
+        GUIHandler.instance.ToggleGUI();
+
         pilot.transform.localPosition = pilotExitPosition.transform.localPosition;
         pilot.transform.localEulerAngles = new Vector3(0, 0, 0);
         pilot = null;
