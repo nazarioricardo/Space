@@ -1,11 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GunController : MonoBehaviour {
 
     [HideInInspector]
     public Transform muzzle;
+
+    [HideInInspector]
+    public List<Transform> muzzles;
 
     [HideInInspector]
     public bool shouldFire;
@@ -19,6 +23,7 @@ public class GunController : MonoBehaviour {
     void Start()
     {
         muzzle = transform.Find("Muzzle");
+        muzzles = GetComponentsInChildren<Transform>().Where(transform => transform.name == "Muzzle").ToList<Transform>();
     }
 
     public virtual void Fire() 
@@ -31,7 +36,11 @@ public class GunController : MonoBehaviour {
         nextShotTime = Time.time + fireRate;
 
         // Instantiate Projectile
-        Instantiate(projectile, muzzle.position, muzzle.rotation, gameObject.transform.root);
+
+        for (int i = 0; i < muzzles.Count; i++)
+        {
+            Instantiate(projectile, muzzles[i].position, muzzles[i].rotation, gameObject.transform.root);
+        }
 
         shouldFire = true;
     }
