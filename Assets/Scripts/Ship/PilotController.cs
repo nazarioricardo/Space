@@ -198,7 +198,8 @@ public class PilotController : MonoBehaviour
         if (activeThrustMode == ThrustMode.Reverse)
             target = Mathf.Clamp(thrust - acceleration * Time.deltaTime, minThrust, maxThrust);
 
-        thrust = Mathf.Lerp(thrust, target, 0.5f);
+        //thrust = Mathf.Lerp(thrust, target, 0.5f);
+        thrust = Global.FloatLerp(thrust, target, 0.5f, 0.01f);
         transform.position += transform.forward * thrust * Time.deltaTime;
     }
 
@@ -219,7 +220,8 @@ public class PilotController : MonoBehaviour
         if (yAxis == 0.0f && vThrust < 0)
             target = Mathf.Clamp(vThrust + acceleration * Time.deltaTime, minV, 0);
 
-        vThrust = Mathf.Lerp(vThrust, target, 5 * Time.deltaTime);
+        //vThrust = Mathf.Lerp(vThrust, target, 5 * Time.deltaTime);
+        vThrust = Global.FloatLerp(vThrust, target, 0.5f, 0.01f);
         transform.position += transform.up * vThrust * Time.deltaTime;
 
         pilotCamController.Elevate(-yAxis);
@@ -238,7 +240,8 @@ public class PilotController : MonoBehaviour
     {
         float yAxis = -InputManager.RightVerticalAxis();
         float target = yAxis * sensitivityY * Time.deltaTime;
-        rotationY = Mathf.Lerp(rotationY, target, 5 * Time.deltaTime);
+        //rotationY = Mathf.Lerp(rotationY, target, 5 * Time.deltaTime);
+        rotationY = Global.FloatLerp(rotationY, target, 0.5f, 0.01f);
         Vector3 localRotation = new Vector3(rotationY, 0.0f, 0.0f);
         transform.Rotate(localRotation);
         pilotCamController.Pitch(-yAxis, thrust / maxThrust);
@@ -248,7 +251,8 @@ public class PilotController : MonoBehaviour
     {
         float xAxis = InputManager.RightHorizontalAxis();
         float target = xAxis * sensitivityX * Time.deltaTime;
-        rotationX = Mathf.Lerp(rotationX, target, 5 * Time.deltaTime);
+        //rotationX = Mathf.Lerp(rotationX, target, 5 * Time.deltaTime);
+        rotationX = Global.FloatLerp(rotationX, target, 0.5f, 0.01f);
         Vector3 localRotation = new Vector3(0.0f, rotationX, 0.0f);
         transform.Rotate(localRotation);
         pilotCamController.Yaw(xAxis, thrust / maxThrust);
@@ -261,7 +265,8 @@ public class PilotController : MonoBehaviour
             return;
 
         float zAxis = InputManager.LeftHorizontalAxis() * -1f * rollSpeed;
-        rotationZ = Mathf.Lerp(rotationZ, zAxis, 5 * Time.deltaTime);
+        //rotationZ = Mathf.Lerp(rotationZ, zAxis, 5 * Time.deltaTime);
+        rotationZ = Global.FloatLerp(rotationZ, zAxis, 0.5f, 0.01f);
         transform.Rotate(new Vector3(0.0f, 0.0f, rotationZ) * Time.deltaTime);
     }
 
@@ -278,7 +283,8 @@ public class PilotController : MonoBehaviour
         if (thrust < 0)
             target = Mathf.Clamp(thrust + 10f * Time.deltaTime, minThrust, maxThrust);
 
-        thrust = Mathf.Lerp(thrust, target, 5 * Time.deltaTime);
+        //thrust = Mathf.Lerp(thrust, target, 5 * Time.deltaTime);
+        thrust = Global.FloatLerp(thrust, target, 0.5f, 0.01f);
         transform.position += transform.forward * thrust * Time.deltaTime;
     }
 
@@ -299,7 +305,8 @@ public class PilotController : MonoBehaviour
         if (thrust < 0)
             target = Mathf.Clamp(thrust + 20f * Time.deltaTime, minThrust, maxThrust);
 
-        thrust = Mathf.Lerp(thrust, target, 5 * Time.deltaTime);
+        //thrust = Mathf.Lerp(thrust, target, 5 * Time.deltaTime);
+        thrust = Global.FloatLerp(thrust, target, 0.5f, 0.01f);
         transform.position += transform.forward * thrust * Time.deltaTime;
     }
 
@@ -320,7 +327,8 @@ public class PilotController : MonoBehaviour
             target = Mathf.Clamp(sThrust + acceleration * Time.deltaTime, minS, 0);
 
         Bank(xAxis);
-        sThrust = Mathf.Lerp(sThrust, target, 5 * Time.deltaTime);
+        //sThrust = Mathf.Lerp(sThrust, target, 5 * Time.deltaTime);
+        sThrust = Global.FloatLerp(sThrust, target, 0.5f, 0.01f);
         transform.position += transform.right * sThrust * Time.deltaTime;
 
         pilotCamController.Strafe(-xAxis);
@@ -364,7 +372,9 @@ public class PilotController : MonoBehaviour
          * negative bank
          */
 
-        bank = Mathf.Lerp(bank, -xMovement * 70 * Time.deltaTime * thrust / 10, Time.deltaTime * 2);
+        float target = -xMovement * 70 * Time.deltaTime * thrust / 10;
+        bank = Global.FloatLerp(bank, target, 2f * Time.deltaTime, 0.01f);
+        //bank = Mathf.Lerp(bank, -xMovement * 70 * Time.deltaTime * thrust / 10, Time.deltaTime * 2);
         Vector3 rotation = new Vector3(0.0f, 0.0f, bank);
         hull.transform.localEulerAngles = rotation;
     }

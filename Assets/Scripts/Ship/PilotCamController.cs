@@ -25,13 +25,6 @@ public class PilotCamController : MonoBehaviour
     {
         if (isStabilizing)
             return;
-
-        Vector3 direction = (shipHull.transform.localPosition - cam.transform.localPosition).normalized;
-        Quaternion targetRotation = Quaternion.LookRotation(direction) * Quaternion.Euler(defaultCameraRotation);
-        Vector3 targetPosition = shipHull.transform.localPosition + defaultCameraPosition;
-
-        cam.transform.localRotation = Quaternion.Lerp(cam.transform.localRotation, targetRotation, 2f * Time.deltaTime);
-        cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition, targetPosition, 2f * Time.deltaTime);
     }
 
     public void OnStabilize()
