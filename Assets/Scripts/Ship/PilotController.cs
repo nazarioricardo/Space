@@ -339,21 +339,24 @@ public class PilotController : MonoBehaviour
         isStabilizing = true;
         pilotCamController.OnStabilize();
 
-        hullRigidbody.angularVelocity = Vector3.Lerp(hullRigidbody.angularVelocity, Vector3.zero, 2f * Time.deltaTime);
-        hullRigidbody.velocity = Vector3.Lerp(hullRigidbody.velocity, Vector3.zero, 2f * Time.deltaTime);
-        transform.position = Vector3.Lerp(transform.position, hull.transform.position, 2f * Time.deltaTime);
-        hull.transform.localPosition = Vector3.Lerp(hull.transform.localPosition, Vector3.zero, 2f * Time.deltaTime);
+        //hullRigidbody.angularVelocity = Vector3.Lerp(hullRigidbody.angularVelocity, Vector3.zero, 2f * Time.deltaTime);
+        //hullRigidbody.velocity = Vector3.Lerp(hullRigidbody.velocity, Vector3.zero, 2f * Time.deltaTime);
+        //transform.position = Vector3.Lerp(transform.position, hull.transform.position, 2f * Time.deltaTime);
+        //hull.transform.localPosition = Vector3.Lerp(hull.transform.localPosition, Vector3.zero, 2f * Time.deltaTime);
 
-        if (hull.transform.localPosition.magnitude < 0.05f)
-            hull.transform.localPosition = Vector3.zero;
+        //if (hull.transform.localPosition.magnitude < 0.05f)
+        //    hull.transform.localPosition = Vector3.zero;
 
-        if (hullRigidbody.angularVelocity.magnitude < 0.5f)
-            hullRigidbody.angularVelocity = Vector3.zero;
+        //if (hullRigidbody.angularVelocity.magnitude < 0.05f)
+        //    hullRigidbody.angularVelocity = Vector3.zero;
 
-        if (hullRigidbody.velocity.magnitude < 0.05f)
-            hullRigidbody.velocity = Vector3.zero;
+        //if (hullRigidbody.velocity.magnitude < 0.05f)
+        //hullRigidbody.velocity = Vector3.zero;
 
-        if (hullRigidbody.angularVelocity == Vector3.zero && hullRigidbody.velocity == Vector3.zero && hull.transform.localPosition == Vector3.zero)
+        hullRigidbody.angularVelocity = Global.Vector3Lerp(hullRigidbody.angularVelocity, Vector3.zero, 0.5f, 0.05f);
+        hullRigidbody.velocity = Global.Vector3Lerp(hullRigidbody.velocity, Vector3.zero, 0.5f, 0.05f);
+
+        if (hullRigidbody.angularVelocity == Vector3.zero && hullRigidbody.velocity == Vector3.zero)
         {
             needStabilizing = false;
             isStabilizing = false;   

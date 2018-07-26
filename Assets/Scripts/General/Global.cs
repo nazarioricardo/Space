@@ -22,4 +22,15 @@ public static class Global
 
         return value;
     }
+
+    public static Vector3 Vector3Lerp(Vector3 value, Vector3 target, float damper, float threshold)
+    {
+
+        value = Vector3.Lerp(value, target, damper);
+
+        if (value.magnitude < threshold)
+            value = Vector3.zero;
+
+        return value;
+    }
 }

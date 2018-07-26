@@ -29,8 +29,7 @@ public class PilotCamController : MonoBehaviour
 
     public void OnStabilize()
     {
-        cam.transform.localRotation = Quaternion.Lerp(cam.transform.localRotation, Quaternion.Euler(defaultCameraRotation), 2f * Time.deltaTime);
-        cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition, defaultCameraPosition, 2f * Time.deltaTime);
+      
     }
 
     public void Pitch(float shipPitch, float currentThrustPercentage)
@@ -38,7 +37,8 @@ public class PilotCamController : MonoBehaviour
         Vector3 currentPosition = cam.transform.localPosition;
         float targetY = shipPitch * (currentThrustPercentage * maxCamDislocation + 1) + defaultCameraPosition.y;
         Vector3 targetPosition = new Vector3(currentPosition.x, targetY, currentPosition.z);
-        cam.transform.localPosition = Vector3.Lerp(currentPosition, targetPosition, yawLag * Time.deltaTime);
+
+        cam.transform.localPosition = Global.Vector3Lerp(currentPosition, targetPosition, yawLag * Time.deltaTime, 0.05f);
     }
 
     public void Yaw(float shipYaw, float currentThrustPercentage)
@@ -47,7 +47,7 @@ public class PilotCamController : MonoBehaviour
         float targetX = shipYaw * (currentThrustPercentage * maxCamDislocation + 1) + defaultCameraPosition.x;
         Vector3 targetPosition = new Vector3(targetX, currentPosition.y, currentPosition.z);
 
-        cam.transform.localPosition = Vector3.Lerp(currentPosition, targetPosition, pitchLag * Time.deltaTime);
+        cam.transform.localPosition = Global.Vector3Lerp(currentPosition, targetPosition, pitchLag * Time.deltaTime, 0.05f);
     }
 
     public void Strafe(float shipStrafe) 
@@ -56,7 +56,7 @@ public class PilotCamController : MonoBehaviour
         float targetX = shipStrafe + defaultCameraPosition.x;
         Vector3 targetPosition = new Vector3(targetX, currentPosition.y, currentPosition.z);
 
-        cam.transform.localPosition = Vector3.Lerp(currentPosition, targetPosition, Time.deltaTime);
+        cam.transform.localPosition = Global.Vector3Lerp(currentPosition, targetPosition, Time.deltaTime, 0.05f);
     }
 
     public void Elevate(float shipElevate)
@@ -64,7 +64,8 @@ public class PilotCamController : MonoBehaviour
         Vector3 currentPosition = cam.transform.localPosition;
         float targetY = shipElevate + defaultCameraPosition.y;
         Vector3 targetPosition = new Vector3(currentPosition.x, targetY, currentPosition.z);
-        cam.transform.localPosition = Vector3.Lerp(currentPosition, targetPosition, Time.deltaTime);
+
+        cam.transform.localPosition = Global.Vector3Lerp(currentPosition, targetPosition, Time.deltaTime, 0.05f);
     }
 
     public void SetCamera(GameObject camObject)
