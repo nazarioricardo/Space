@@ -35,8 +35,7 @@ public class GunController : MonoBehaviour {
 
         nextShotTime = Time.time + fireRate;
 
-        // Instantiate Projectile
-
+        // Instantiate Projectile 
         for (int i = 0; i < muzzles.Count; i++)
         {
             Instantiate(projectile, muzzles[i].position, muzzles[i].rotation, gameObject.transform.root);

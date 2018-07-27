@@ -17,6 +17,7 @@ public class PlayerShipInteractions : MonoBehaviour
     private Collider activeTrigger;
     private Collider gateTrigger;
     private Collider pilotTrigger;
+    private Animator animator;
 
     private bool isPilot = false;
 
@@ -25,6 +26,7 @@ public class PlayerShipInteractions : MonoBehaviour
     {
         characterMovement = gameObject.GetComponent<CharacterMovement>();
         characterController = gameObject.GetComponent<CharacterController>();
+        animator = GetComponentInChildren<Animator>();
         cam = gameObject.transform.Find("MainCamera").gameObject;
     }
 
@@ -106,6 +108,7 @@ public class PlayerShipInteractions : MonoBehaviour
         characterController.enabled = false;
         pilotController.SetPilot(gameObject);
         pilotController.enabled = true;
+        animator.SetInteger("isSitting", 1);
     }
 
     void StopPilot()
@@ -125,6 +128,8 @@ public class PlayerShipInteractions : MonoBehaviour
         // 2. Learn Ray Casting
 
         ExitShip();
+        animator.SetInteger("isSitting", 0);
+
     }
 
     void SetThirdPersonCamera()
