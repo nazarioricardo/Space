@@ -390,7 +390,7 @@ public class PilotController : MonoBehaviour
 
         pilot = player;
         pilot.transform.localPosition = pilotPosition.transform.position;
-        pilot.transform.localEulerAngles = new Vector3(0, 0, 0);
+        pilot.transform.rotation = transform.rotation;
         pilot.transform.SetParent(hull.transform);
 
         pilotCamController = GetComponent<PilotCamController>();
