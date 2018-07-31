@@ -16,6 +16,8 @@ public class CharacterMovement : MonoBehaviour
     public float mouseSensitivity = 100.0f;
     private float modAngle = 360.0f;
 
+    private InputManager InputManager;
+
     private float horizontalMovement;
     private float verticalMovement;
     private float rotationY = 0.0f; // rotation around the up/y axis
@@ -31,6 +33,7 @@ public class CharacterMovement : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         animator = GetComponentInChildren<Animator>();
+        InputManager = GetComponent<InputManager>();
         InitializeRotation();
     }
 

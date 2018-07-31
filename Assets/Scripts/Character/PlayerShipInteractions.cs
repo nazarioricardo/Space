@@ -8,6 +8,7 @@ public class PlayerShipInteractions : MonoBehaviour
 {
 
     public Vector3 defaultCameraPosition;
+    private InputManager InputManager;
 
     private GameObject cam;
     private CharacterMovement characterMovement;
@@ -24,6 +25,7 @@ public class PlayerShipInteractions : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        InputManager = GetComponent<InputManager>();
         characterMovement = gameObject.GetComponent<CharacterMovement>();
         characterController = gameObject.GetComponent<CharacterController>();
         animator = GetComponentInChildren<Animator>();

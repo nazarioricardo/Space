@@ -3,37 +3,42 @@ using System.Collections.Generic;
 using UnityEngine;
 using Rewired;
 
-public static class InputManager
+public class InputManager: MonoBehaviour
 {
+    public int playerIndex = 0;
+    private Player player;
 
-    private static Player player = Rewired.ReInput.players.GetPlayer(0);
+    private void Awake()
+    {
+        player = Rewired.ReInput.players.GetPlayer(playerIndex);
+    }
 
     /*
      * Axes
      */
 
-    public static float LeftHorizontalAxis()
+    public float LeftHorizontalAxis()
     {
         float r = 0.0f;
         r += player.GetAxis("Left Horizontal");
         return Mathf.Clamp(r, -1.0f, 1.0f);
     }
 
-    public static float LeftVerticalAxis()
+    public float LeftVerticalAxis()
     {
         float r = 0.0f;
         r += player.GetAxis("Left Vertical");
         return Mathf.Clamp(r, -1.0f, 1.0f);
     }
 
-    public static float RightHorizontalAxis()
+    public float RightHorizontalAxis()
     {
         float r = 0.0f;
         r += player.GetAxis("Right Horizontal");
         return Mathf.Clamp(r, -1.0f, 1.0f);
     }
 
-    public static float RightVerticalAxis()
+    public float RightVerticalAxis()
     {
         float r = 0.0f;
         r += player.GetAxis("Right Vertical");
@@ -44,7 +49,7 @@ public static class InputManager
      * Buttons
      */
 
-    public static bool ActionButtonDown()
+    public bool ActionButtonDown()
     {
         /*
          * PC: U
@@ -55,7 +60,7 @@ public static class InputManager
         return player.GetButtonDown("Action");
     }
 
-    public static bool JumpButtonDown()
+    public bool JumpButtonDown()
     {
         /*
          * PC: Space
@@ -66,7 +71,7 @@ public static class InputManager
         return player.GetButtonDown("Jump");
     }
 
-    public static bool BrakeButtonDown()
+    public bool BrakeButtonDown()
     {
         /*
          * PC: F
@@ -81,7 +86,7 @@ public static class InputManager
      * Triggers
      */
 
-    public static bool ThrottleDownButtonDown()
+    public bool ThrottleDownButtonDown()
     {
         /*
          * PC: Q
@@ -92,12 +97,12 @@ public static class InputManager
         return player.GetButtonDown("Left Trigger");
     }
 
-    public static bool ThrottleDownButtonUp()
+    public bool ThrottleDownButtonUp()
     {
         return player.GetButtonUp("Left Trigger");
     }
 
-    public static bool ThrottleUpButtonDown()
+    public bool ThrottleUpButtonDown()
     {
         /*
          * PC: E
@@ -108,12 +113,12 @@ public static class InputManager
         return player.GetButtonDown("Right Trigger");
     }
 
-    public static bool ThrottleUpButtonUp()
+    public bool ThrottleUpButtonUp()
     {
         return player.GetButtonUp("Right Trigger");
     }
 
-    public static bool PrimaryFireButtonDown()
+    public bool PrimaryFireButtonDown()
     {
         return player.GetButtonDown("Right Bumper");
     }

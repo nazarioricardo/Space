@@ -9,10 +9,13 @@ public class WeaponsController : MonoBehaviour {
     [HideInInspector]
     public GameObject hull;
 
+    [HideInInspector]
+    public InputManager InputManager;
+
 	// Use this for initialization
 	void Start () {
-		
-	}
+
+    }
 	
 	// Update is called once per frame
 	void Update () {

@@ -16,6 +16,9 @@ public class PilotController : MonoBehaviour
     public Text thrustLabel;
     public Text speedLabel;
 
+    // Inputs
+    private InputManager InputManager;
+
     // Camera
     private PilotCamController pilotCamController;
 
@@ -394,10 +397,12 @@ public class PilotController : MonoBehaviour
         pilot.transform.SetParent(hull.transform);
 
         pilotCamController = GetComponent<PilotCamController>();
+        InputManager = pilot.GetComponent<InputManager>();
         pilotCamController.enabled = true;
         pilotCamController.SetCamera(pilot.transform.Find("MainCamera").gameObject);
 
         weaponsController = GetComponent<WeaponsController>();
+        weaponsController.InputManager = InputManager;
         weaponsController.enabled = true;
     }
 
