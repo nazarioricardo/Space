@@ -385,8 +385,17 @@ public class PilotController : MonoBehaviour
         hull.transform.localEulerAngles = rotation;
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("Colliding with: " + collision.gameObject.name);
+    }
+
     public void SetPilot(GameObject player)
     {
+
+        if (pilot != null)
+            return;
+
         GUIHandler.instance.ToggleGUI();
 
         hull = transform.Find("Hull").gameObject;

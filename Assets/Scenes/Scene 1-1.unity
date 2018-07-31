@@ -2216,10 +2216,6 @@ Prefab:
       value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 1848273273907694, guid: 34edb547a4619496fac26515dd80f2ce, type: 2}
-      propertyPath: m_Name
-      value: Dual AS Projectile
-      objectReference: {fileID: 0}
-    - target: {fileID: 1848273273907694, guid: 34edb547a4619496fac26515dd80f2ce, type: 2}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
