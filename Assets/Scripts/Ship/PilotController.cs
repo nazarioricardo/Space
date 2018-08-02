@@ -49,8 +49,9 @@ public class PilotController : MonoBehaviour
     private GameObject hull;
     private Rigidbody hullRigidbody;
 
-    // Player Management Props
-    private GameObject pilot;
+    // Player Management
+    [HideInInspector]
+    public GameObject pilot;
 
     // Ship Movement
     private enum ThrustMode { Off, Free, Hover, Cruise, Reverse }
@@ -243,7 +244,6 @@ public class PilotController : MonoBehaviour
     {
         float yAxis = -InputManager.RightVerticalAxis();
         float target = yAxis * sensitivityY * Time.deltaTime;
-        //rotationY = Mathf.Lerp(rotationY, target, 5 * Time.deltaTime);
         rotationY = Global.FloatLerp(rotationY, target, 0.5f, 0.01f);
         Vector3 localRotation = new Vector3(rotationY, 0.0f, 0.0f);
         transform.Rotate(localRotation);
@@ -254,7 +254,6 @@ public class PilotController : MonoBehaviour
     {
         float xAxis = InputManager.RightHorizontalAxis();
         float target = xAxis * sensitivityX * Time.deltaTime;
-        //rotationX = Mathf.Lerp(rotationX, target, 5 * Time.deltaTime);
         rotationX = Global.FloatLerp(rotationX, target, 0.5f, 0.01f);
         Vector3 localRotation = new Vector3(0.0f, rotationX, 0.0f);
         transform.Rotate(localRotation);
@@ -268,7 +267,6 @@ public class PilotController : MonoBehaviour
             return;
 
         float zAxis = InputManager.LeftHorizontalAxis() * -1f * rollSpeed;
-        //rotationZ = Mathf.Lerp(rotationZ, zAxis, 5 * Time.deltaTime);
         rotationZ = Global.FloatLerp(rotationZ, zAxis, 0.5f, 0.01f);
         transform.Rotate(new Vector3(0.0f, 0.0f, rotationZ) * Time.deltaTime);
     }
@@ -286,7 +284,6 @@ public class PilotController : MonoBehaviour
         if (thrust < 0)
             target = Mathf.Clamp(thrust + 10f * Time.deltaTime, minThrust, maxThrust);
 
-        //thrust = Mathf.Lerp(thrust, target, 5 * Time.deltaTime);
         thrust = Global.FloatLerp(thrust, target, 0.5f, 0.01f);
         transform.position += transform.forward * thrust * Time.deltaTime;
     }
@@ -308,7 +305,6 @@ public class PilotController : MonoBehaviour
         if (thrust < 0)
             target = Mathf.Clamp(thrust + 20f * Time.deltaTime, minThrust, maxThrust);
 
-        //thrust = Mathf.Lerp(thrust, target, 5 * Time.deltaTime);
         thrust = Global.FloatLerp(thrust, target, 0.5f, 0.01f);
         transform.position += transform.forward * thrust * Time.deltaTime;
     }
@@ -330,7 +326,6 @@ public class PilotController : MonoBehaviour
             target = Mathf.Clamp(sThrust + acceleration * Time.deltaTime, minS, 0);
 
         Bank(xAxis);
-        //sThrust = Mathf.Lerp(sThrust, target, 5 * Time.deltaTime);
         sThrust = Global.FloatLerp(sThrust, target, 0.5f, 0.01f);
         transform.position += transform.right * sThrust * Time.deltaTime;
 
@@ -341,20 +336,6 @@ public class PilotController : MonoBehaviour
     {
         isStabilizing = true;
         pilotCamController.OnStabilize();
-
-        //hullRigidbody.angularVelocity = Vector3.Lerp(hullRigidbody.angularVelocity, Vector3.zero, 2f * Time.deltaTime);
-        //hullRigidbody.velocity = Vector3.Lerp(hullRigidbody.velocity, Vector3.zero, 2f * Time.deltaTime);
-        //transform.position = Vector3.Lerp(transform.position, hull.transform.position, 2f * Time.deltaTime);
-        //hull.transform.localPosition = Vector3.Lerp(hull.transform.localPosition, Vector3.zero, 2f * Time.deltaTime);
-
-        //if (hull.transform.localPosition.magnitude < 0.05f)
-        //    hull.transform.localPosition = Vector3.zero;
-
-        //if (hullRigidbody.angularVelocity.magnitude < 0.05f)
-        //    hullRigidbody.angularVelocity = Vector3.zero;
-
-        //if (hullRigidbody.velocity.magnitude < 0.05f)
-        //hullRigidbody.velocity = Vector3.zero;
 
         hullRigidbody.angularVelocity = Global.Vector3Lerp(hullRigidbody.angularVelocity, Vector3.zero, 0.5f, 0.05f);
         hullRigidbody.velocity = Global.Vector3Lerp(hullRigidbody.velocity, Vector3.zero, 0.5f, 0.05f);
@@ -380,21 +361,15 @@ public class PilotController : MonoBehaviour
 
         float target = -xMovement * 70 * Time.deltaTime * thrust / 10;
         bank = Global.FloatLerp(bank, target, 2f * Time.deltaTime, 0.01f);
-        //bank = Mathf.Lerp(bank, -xMovement * 70 * Time.deltaTime * thrust / 10, Time.deltaTime * 2);
         Vector3 rotation = new Vector3(0.0f, 0.0f, bank);
         hull.transform.localEulerAngles = rotation;
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        Debug.Log("Colliding with: " + collision.gameObject.name);
-    }
-
-    public void SetPilot(GameObject player)
+    public bool SetPilot(GameObject player)
     {
 
-        if (pilot != null)
-            return;
+        if (pilot)
+            return false;
 
         GUIHandler.instance.ToggleGUI();
 
@@ -413,6 +388,8 @@ public class PilotController : MonoBehaviour
         weaponsController = GetComponent<WeaponsController>();
         weaponsController.InputManager = InputManager;
         weaponsController.enabled = true;
+
+        return true;
     }
 
     public void RemovePilot()

@@ -14,13 +14,6 @@ public class PilotCamController : MonoBehaviour
     private GameObject rig;
     private Camera cam;
 
-    private GameObject shipHull;
-
-    private void Awake()
-    {
-        shipHull = transform.Find("Hull").gameObject;
-    }
-
     public void OnDestabilize(bool isStabilizing) 
     {
         if (isStabilizing)

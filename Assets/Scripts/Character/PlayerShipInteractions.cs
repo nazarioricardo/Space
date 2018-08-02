@@ -98,19 +98,25 @@ public class PlayerShipInteractions : MonoBehaviour
             StartPilot(trigger);
         else
             StopPilot();
-
-        isPilot = !isPilot;
     }
 
     void StartPilot(Collider trigger)
     {
         EnterShip(trigger);
 
+        if (pilotController.pilot)
+        {
+            Debug.Log("Ship already has pilot");
+            ExitShip();
+            return;
+        }
+
         characterMovement.enabled = false;
         characterController.enabled = false;
         pilotController.SetPilot(gameObject);
         pilotController.enabled = true;
         animator.SetInteger("isSitting", 1);
+        isPilot = true;
     }
 
     void StopPilot()
@@ -131,7 +137,7 @@ public class PlayerShipInteractions : MonoBehaviour
 
         ExitShip();
         animator.SetInteger("isSitting", 0);
-
+        isPilot = false;
     }
 
     void SetThirdPersonCamera()
