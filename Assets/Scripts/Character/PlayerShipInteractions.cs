@@ -144,7 +144,6 @@ public class PlayerShipInteractions : MonoBehaviour
     {
         Debug.Log("Camera Rig: " + cam);
 
-
         // Consider current differences between this file and pilotcamcontroller regarding cam and rig
         cam.transform.SetParent(gameObject.transform);
         cam.transform.localScale = new Vector3(1, 1, 1);

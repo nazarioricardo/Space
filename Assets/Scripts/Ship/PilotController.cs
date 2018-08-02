@@ -376,14 +376,15 @@ public class PilotController : MonoBehaviour
         hull = transform.Find("Hull").gameObject;
 
         pilot = player;
+        InputManager = pilot.GetComponent<InputManager>();
+
+        pilotCamController = GetComponent<PilotCamController>();
+        pilotCamController.enabled = true;
+        pilotCamController.SetCamera(pilot.transform.Find("MainCamera").gameObject);
+
         pilot.transform.localPosition = pilotPosition.transform.position;
         pilot.transform.rotation = transform.rotation;
         pilot.transform.SetParent(hull.transform);
-
-        pilotCamController = GetComponent<PilotCamController>();
-        InputManager = pilot.GetComponent<InputManager>();
-        pilotCamController.enabled = true;
-        pilotCamController.SetCamera(pilot.transform.Find("MainCamera").gameObject);
 
         weaponsController = GetComponent<WeaponsController>();
         weaponsController.InputManager = InputManager;

@@ -64,26 +64,20 @@ public class PilotCamController : MonoBehaviour
     public void SetCamera(GameObject camObject)
     {
         rig = camObject;
+        cam = rig.gameObject.GetComponent<Camera>();
+
         rig.transform.SetParent(gameObject.transform);
         rig.transform.localPosition = Vector3.zero;
         rig.transform.localScale = new Vector3(1, 1, 1);
+        rig.transform.rotation = gameObject.transform.rotation;
 
-        cam = rig.gameObject.GetComponent<Camera>();
         cam.transform.localPosition = defaultCameraPosition;
-        cam.transform.localEulerAngles = defaultCameraRotation;
+        cam.transform.rotation = gameObject.transform.rotation;
     }
 
     public void RemoveCameraRig()
     {
         rig = null;
         cam = null;
-    }
-
-    void SetCameraPosition()
-    {
-        rig.transform.SetParent(gameObject.transform);
-        rig.transform.localScale = new Vector3(1, 1, 1);
-        rig.transform.localPosition = defaultCameraPosition;
-        rig.transform.localEulerAngles = defaultCameraRotation;
     }
 }

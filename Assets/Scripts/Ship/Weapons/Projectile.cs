@@ -47,5 +47,6 @@ public class Projectile : MonoBehaviour {
     private void OnCollisionEnter(Collision collision)
     {
         Debug.Log("Projectile Hit " + collision.gameObject.name);
+        Destroy(gameObject);
     }
 }
